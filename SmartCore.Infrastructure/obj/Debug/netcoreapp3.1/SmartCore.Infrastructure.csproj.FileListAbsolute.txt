@@ -1,0 +1,5 @@
+E:\ProjectX\NetCoreExample\SmartCore.Infrastructure\bin\Debug\netcoreapp3.1\SmartCore.Infrastructure.deps.json
+E:\ProjectX\NetCoreExample\SmartCore.Infrastructure\bin\Debug\netcoreapp3.1\SmartCore.Infrastructure.dll
+E:\ProjectX\NetCoreExample\SmartCore.Infrastructure\obj\Debug\netcoreapp3.1\SmartCore.Infrastructure.csprojAssemblyReference.cache
+E:\ProjectX\NetCoreExample\SmartCore.Infrastructure\obj\Debug\netcoreapp3.1\SmartCore.Infrastructure.AssemblyInfoInputs.cache
+E:\ProjectX\NetCoreExample\SmartCore.Infrastructure\obj\Debug\netcoreapp3.1\SmartCore.Infrastructure.AssemblyInfo.cs
