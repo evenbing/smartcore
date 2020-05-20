@@ -1,0 +1,9 @@
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.AssemblyInfoInputs.cache
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.AssemblyInfo.cs
+E:\ProjectX\NetCoreExample\SmartCore.Services\bin\Debug\netcoreapp3.1\SmartCore.Services.deps.json
+E:\ProjectX\NetCoreExample\SmartCore.Services\bin\Debug\netcoreapp3.1\SmartCore.Services.dll
+E:\ProjectX\NetCoreExample\SmartCore.Services\bin\Debug\netcoreapp3.1\SmartCore.Services.pdb
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.dll
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.pdb
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.csprojAssemblyReference.cache
+E:\ProjectX\NetCoreExample\SmartCore.Services\obj\Debug\netcoreapp3.1\SmartCore.Services.csproj.CoreCompileInputs.cache

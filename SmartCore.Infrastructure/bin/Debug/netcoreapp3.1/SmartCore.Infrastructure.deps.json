@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "SmartCore.Infrastructure/1.0.0": {
         "dependencies": {
+          "Dapper": "2.0.35",
           "Dapper.Contrib": "2.0.35"
         },
         "runtime": {

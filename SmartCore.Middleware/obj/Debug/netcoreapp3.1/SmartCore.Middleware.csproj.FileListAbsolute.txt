@@ -1,0 +1,9 @@
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.deps.json
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.dll
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.pdb
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.AssemblyInfoInputs.cache
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.AssemblyInfo.cs
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.dll
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.pdb
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csprojAssemblyReference.cache
+E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csproj.CoreCompileInputs.cache

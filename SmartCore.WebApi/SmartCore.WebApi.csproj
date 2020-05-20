@@ -9,5 +9,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartCore.Middleware\SmartCore.Middleware.csproj" />
+    <ProjectReference Include="..\SmartCore.Services\SmartCore.Services.csproj" />
+  </ItemGroup>
+
 
 </Project>

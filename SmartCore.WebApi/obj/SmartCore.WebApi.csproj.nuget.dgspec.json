@@ -4,14 +4,14 @@
     "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {}
   },
   "projects": {
-    "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {
+    "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
-        "projectName": "SmartCore.WebApi",
-        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
+        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
+        "projectName": "SmartCore.Middleware",
+        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\obj\\",
+        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,13 +38,151 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[3.1.4, )"
             },
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
-              "version": "[3.1.1, )"
+              "version": "[3.1.4, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.5.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj",
+        "projectName": "SmartCore.Services",
+        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
+        "projectName": "SmartCore.WebApi",
+        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
+                "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj"
+              },
+              "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj": {
+                "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
