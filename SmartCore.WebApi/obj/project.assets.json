@@ -1095,7 +1095,7 @@
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "3.1.4",
-          "System.IdentityModel.Tokens.Jwt": "6.5.0"
+          "System.IdentityModel.Tokens.Jwt": "6.5.1"
         },
         "compile": {
           "bin/placeholder/SmartCore.Services.dll": {}

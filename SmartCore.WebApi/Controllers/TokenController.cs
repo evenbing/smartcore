@@ -27,5 +27,7 @@ namespace WebApi.Controllers
             var token = jwt.GenerateSecurityToken("fake@email.com");
             return token;
         }
+
+
     }
 }

@@ -34,6 +34,7 @@ namespace SmartCore.WebApi
                 options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
                 options.Filters.Add(typeof(ValidateModelAttribute));
                 options.Filters.Add(typeof(WebApiResultMiddleware));
+                options.Filters.Add(typeof(CustomExceptionAttribute));
                 options.RespectBrowserAcceptHeader = true;
             }).AddNewtonsoftJson(options =>
             {
