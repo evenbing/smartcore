@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using SmartCore.Middleware;
-
+using Swashbuckle.AspNetCore.Swagger;
 namespace SmartCore.WebApi
 {
     public class Startup
@@ -45,11 +47,23 @@ namespace SmartCore.WebApi
                 // Configure a custom converter
                 //options.SerializerSettings.Converters.Add(new MyCustomJsonConverter());
             });
-            services.AddTokenAuthentication(Configuration); 
+            services.AddTokenAuthentication(Configuration);
+            #region Configure Swagger
             services.AddSwaggerGen(c =>
             {
+                //Swashbuckle.AspNetCore.Swagger.SwaggerOptions
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",//Jwt default param name
+                    In=Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Type=Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey 
+                });
+                //Add authentication type
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement());
             });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +72,7 @@ namespace SmartCore.WebApi
             app.Use((context, next) =>
             {
                 //Do some work here
-                context.Response.Headers.Add("X-ServerIp", "127.0.0.1");
+                context.Response.Headers.Add("X-WorkId", "127.0.0.1");
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
@@ -86,6 +100,32 @@ namespace SmartCore.WebApi
 
         }
 
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            //containerBuilder.RegisterType<ConnectionFactory>().As<IConnectionFactory>().InstancePerDependency();
+
+            List<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var repositoryAssembly = assemblies.FirstOrDefault(p => p.FullName.EndsWith("Repository"));
+            if (repositoryAssembly != null)
+            {
+                //指定已扫描程序集中的类型注册为提供所有其实现的接口。
+                containerBuilder.RegisterAssemblyTypes(repositoryAssembly).Where(t => t.Name.EndsWith("Repository")).
+                 AsImplementedInterfaces().InstancePerDependency();
+
+            }
+            var servicesAssembly = assemblies.FirstOrDefault(p => p.FullName.EndsWith("Services"));
+            if (servicesAssembly != null)
+            {
+                //指定已扫描程序集中的类型注册为提供所有其实现的接口。
+                containerBuilder.RegisterAssemblyTypes(repositoryAssembly).Where(t => t.Name.EndsWith("Services")).
+                 AsImplementedInterfaces().InstancePerDependency();
+            }
+            //  // 把容器装入到微软默认的依赖注入容器中
+            //containerBuilder.Build();
+            //Configuration.DependencyResolver= new AutofacWebApiDependencyResolver(container);
+            //动态注入拦截器CallLogger 启用类代理拦截
+            //containerBuilder.Register(c => new CallLogger(Console.Out));
+        }
         //public static class SecurityMiddlewareExtensions
         //{
         //    public static IApplicationBuilder UseSecurityMiddleware(this IApplicationBuilder builder)
@@ -94,4 +134,33 @@ namespace SmartCore.WebApi
         //    }
         //}
     }
+    ///// <summary>
+    ///// 拦截器 需要实现 IInterceptor接口 Intercept方法
+    ///// </summary>
+    //public class CallLogger : IInterceptor
+    //{
+    //    TextWriter _output;
+
+    //    public CallLogger(TextWriter output)
+    //    {
+    //        _output = output;
+    //    }
+
+    //    /// <summary>
+    //    /// 拦截方法 打印被拦截的方法执行前的名称、参数和方法执行后的 返回结果
+    //    /// </summary>
+    //    /// <param name="invocation">包含被拦截方法的信息</param>
+    //    public void Intercept(IInvocation invocation)
+    //    {
+
+    //        _output.WriteLine("你正在调用方法 \"{0}\"  参数是 {1}... ",
+    //          invocation.Method.Name,
+    //          string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray()));
+
+    //        //在被拦截的方法执行完毕后 继续执行
+    //        invocation.Proceed();
+
+    //        _output.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue);
+    //    }
+    //}
 }

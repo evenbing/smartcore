@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -15,9 +16,14 @@ namespace SmartCore.WebApi
         {
             CreateHostBuilder(args).Build().Run();
         }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="args"></param>
+        /// <remark>.NET CORE 内置一个IOC容器 用第三方IOC容器Autofac替代内置的</remark>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

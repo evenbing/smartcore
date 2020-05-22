@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace WebApi.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private static readonly string[] Summaries = new[]
          {

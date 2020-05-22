@@ -7,3 +7,11 @@ E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCor
 E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.pdb
 E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csprojAssemblyReference.cache
 E:\ProjectX\NetCoreExample\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csproj.CoreCompileInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.deps.json
+F:\code\donetcore\smartcore\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.dll
+F:\code\donetcore\smartcore\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Middleware.pdb
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.dll
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.pdb

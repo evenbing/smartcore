@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {}
+    "F:\\code\\donetcore\\smartcore\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {}
   },
   "projects": {
-    "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
+    "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
+        "projectUniqueName": "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
         "projectName": "SmartCore.Middleware",
-        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\obj\\",
+        "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\SmartCore.Middleware.csproj",
+        "packagesPath": "C:\\Users\\wenbin.ye\\.nuget\\packages\\",
+        "outputPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wenbin.ye\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
@@ -73,21 +73,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj": {
+    "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj",
+        "projectUniqueName": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj",
         "projectName": "SmartCore.Services",
-        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\obj\\",
+        "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj",
+        "packagesPath": "C:\\Users\\wenbin.ye\\.nuget\\packages\\",
+        "outputPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wenbin.ye\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -95,7 +95,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
@@ -135,21 +135,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {
+    "F:\\code\\donetcore\\smartcore\\SmartCore.WebApi\\SmartCore.WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
+        "projectUniqueName": "F:\\code\\donetcore\\smartcore\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
         "projectName": "SmartCore.WebApi",
-        "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.WebApi\\obj\\",
+        "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.WebApi\\SmartCore.WebApi.csproj",
+        "packagesPath": "C:\\Users\\wenbin.ye\\.nuget\\packages\\",
+        "outputPath": "F:\\code\\donetcore\\smartcore\\SmartCore.WebApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wenbin.ye\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -157,16 +157,16 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
-                "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Middleware\\SmartCore.Middleware.csproj"
+              "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\SmartCore.Middleware.csproj": {
+                "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Middleware\\SmartCore.Middleware.csproj"
               },
-              "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj": {
-                "projectPath": "E:\\ProjectX\\NetCoreExample\\SmartCore.Services\\SmartCore.Services.csproj"
+              "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj": {
+                "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj"
               }
             }
           }
@@ -180,6 +180,14 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Autofac.Extras.DynamicProxy": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[3.1.4, )"
@@ -207,7 +215,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
