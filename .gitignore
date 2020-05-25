@@ -6,3 +6,5 @@
 /SmartCore.Services/bin
 /SmartCore.WebApi/bin
 /SmartCore.WebApi/obj
+/.vs
+/SmartCore.WebApi/.vs
