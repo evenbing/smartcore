@@ -26,7 +26,11 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "projectReferences": {}
+            "projectReferences": {
+              "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj": {
+                "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

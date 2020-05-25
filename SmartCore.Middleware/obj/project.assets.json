@@ -26,6 +26,18 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Configuration/3.1.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll": {}
+        }
+      },
       "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
         "type": "package",
         "dependencies": {
@@ -833,6 +845,20 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
+      },
+      "SmartCore.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "System.IdentityModel.Tokens.Jwt": "6.5.1"
+        },
+        "compile": {
+          "bin/placeholder/SmartCore.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCore.Services.dll": {}
+        }
       }
     }
   },
@@ -918,6 +944,22 @@
         "ref/xamarinwatchos10/_._",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Microsoft.Extensions.Configuration/3.1.4": {
+      "sha512": "+NsYvQ00h+9kSp4/60iCAhPUp9S6joS2rsEmfCVrUmVATCveTewcHdrMB+9pJDYkWzCEqPQoJuMfsxe/299Z0w==",
+      "type": "package",
+      "path": "microsoft.extensions.configuration/3.1.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml",
+        "microsoft.extensions.configuration.3.1.4.nupkg.sha512",
+        "microsoft.extensions.configuration.nuspec"
       ]
     },
     "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
@@ -3611,6 +3653,11 @@
         "system.xml.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xmldocument.nuspec"
       ]
+    },
+    "SmartCore.Services/1.0.0": {
+      "type": "project",
+      "path": "../SmartCore.Services/SmartCore.Services.csproj",
+      "msbuildProject": "../SmartCore.Services/SmartCore.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3618,6 +3665,7 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 3.1.4",
       "Microsoft.Extensions.Configuration.Abstractions >= 3.1.4",
       "Microsoft.Extensions.DependencyInjection >= 3.1.4",
+      "SmartCore.Services >= 1.0.0",
       "System.IdentityModel.Tokens.Jwt >= 6.5.1"
     ]
   },
@@ -3646,7 +3694,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj": {
+              "projectPath": "F:\\code\\donetcore\\smartcore\\SmartCore.Services\\SmartCore.Services.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\code\donetcore\smartcore\SmartCore.WebApi\SmartCore.WebApi.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="5.0.0" />
@@ -15,6 +19,8 @@
     <ProjectReference Include="..\SmartCore.Middleware\SmartCore.Middleware.csproj" />
     <ProjectReference Include="..\SmartCore.Services\SmartCore.Services.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

@@ -11,6 +11,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "3.1.4",
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.4",
           "Microsoft.Extensions.DependencyInjection": "3.1.4",
+          "SmartCore.Services": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "6.5.1"
         },
         "runtime": {
@@ -29,6 +30,17 @@
         }
       },
       "Microsoft.CSharp/4.5.0": {},
+      "Microsoft.Extensions.Configuration/3.1.4": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll": {
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
+          }
+        }
+      },
       "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "3.1.4"
@@ -552,6 +564,15 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
+      },
+      "SmartCore.Services/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "System.IdentityModel.Tokens.Jwt": "6.5.1"
+        },
+        "runtime": {
+          "SmartCore.Services.dll": {}
+        }
       }
     }
   },
@@ -574,6 +595,13 @@
       "sha512": "sha512-kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
       "path": "microsoft.csharp/4.5.0",
       "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration/3.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+NsYvQ00h+9kSp4/60iCAhPUp9S6joS2rsEmfCVrUmVATCveTewcHdrMB+9pJDYkWzCEqPQoJuMfsxe/299Z0w==",
+      "path": "microsoft.extensions.configuration/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.3.1.4.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
       "type": "package",
@@ -959,6 +987,11 @@
       "sha512": "sha512-lJ8AxvkX7GQxpC6GFCeBj8ThYVyQczx2+f/cWHJU8tjS7YfI6Cv6bon70jVEgs2CiFbmmM8b9j1oZVx0dSI2Ww==",
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
+    },
+    "SmartCore.Services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

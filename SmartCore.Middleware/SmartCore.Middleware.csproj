@@ -19,4 +19,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartCore.Services\SmartCore.Services.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -2005,6 +2005,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "3.1.4",
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.4",
           "Microsoft.Extensions.DependencyInjection": "3.1.4",
+          "SmartCore.Services": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "6.5.1"
         },
         "compile": {

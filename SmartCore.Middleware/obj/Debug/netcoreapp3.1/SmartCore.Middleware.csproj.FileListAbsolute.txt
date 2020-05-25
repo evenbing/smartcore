@@ -15,3 +15,6 @@ F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCo
 F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.dll
 F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.pdb
+F:\code\donetcore\smartcore\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Services.dll
+F:\code\donetcore\smartcore\SmartCore.Middleware\bin\Debug\netcoreapp3.1\SmartCore.Services.pdb
+F:\code\donetcore\smartcore\SmartCore.Middleware\obj\Debug\netcoreapp3.1\SmartCore.Middleware.csproj.CopyComplete

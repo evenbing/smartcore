@@ -96,3 +96,4 @@ F:\code\donetcore\smartcore\SmartCore.WebApi\bin\Debug\netcoreapp3.1\Castle.Core
 F:\code\donetcore\smartcore\SmartCore.WebApi\bin\Debug\netcoreapp3.1\Autofac.Extensions.DependencyInjection.dll
 F:\code\donetcore\smartcore\SmartCore.WebApi\obj\Debug\netcoreapp3.1\SmartCore.WebApi.MvcApplicationPartsAssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.WebApi\obj\Debug\netcoreapp3.1\SmartCore.WebApi.MvcApplicationPartsAssemblyInfo.cache
+F:\code\donetcore\smartcore\SmartCore.WebApi\bin\Debug\netcoreapp3.1\SmartCore.WebApi.xml

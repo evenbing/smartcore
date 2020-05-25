@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace SmartCore.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           
             services.AddControllers(options =>
             {
                 // requires using Microsoft.AspNetCore.Mvc.Formatters;
@@ -53,15 +55,34 @@ namespace SmartCore.WebApi
             {
                 //Swashbuckle.AspNetCore.Swagger.SwaggerOptions
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
+                c.OrderActionsBy(a => a.RelativePath);
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";//文件名来源于项目属性==》生成==》输出==》XML文档文件
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                // 启用xml注释. 该方法第二个参数启用控制器的注释，默认为false.
+                c.IncludeXmlComments(xmlPath, true);
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
                 {
+                    //JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",//Jwt default param name
                     In=Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Type=Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey 
+                    Type=Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
                 });
                 //Add authentication type
-                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement());
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
             });
             #endregion
         }
