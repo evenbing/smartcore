@@ -49,7 +49,12 @@ namespace SmartCore.WebApi
                 // Configure a custom converter
                 //options.SerializerSettings.Converters.Add(new MyCustomJsonConverter());
             });
+            #region Authentication
             services.AddTokenAuthentication(Configuration);
+            #endregion
+            #region HttpClientFactory
+            services.AddHttpClient();
+            #endregion
             #region Configure Swagger
             services.AddSwaggerGen(c =>
             {

@@ -1,0 +1,8 @@
+F:\code\donetcore\smartcore\SmartCore.Repository\bin\Debug\netcoreapp3.1\SmartCore.Repository.deps.json
+F:\code\donetcore\smartcore\SmartCore.Repository\bin\Debug\netcoreapp3.1\SmartCore.Repository.dll
+F:\code\donetcore\smartcore\SmartCore.Repository\bin\Debug\netcoreapp3.1\SmartCore.Repository.pdb
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.dll
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.pdb

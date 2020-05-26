@@ -4,6 +4,17 @@
         <name>SmartCore.WebApi</name>
     </assembly>
     <members>
+        <member name="T:SmartCore.WebApi.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
         <member name="M:SmartCore.WebApi.Program.CreateHostBuilder(System.String[])">
              <summary>
             
