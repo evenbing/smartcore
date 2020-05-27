@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 //using WebApi.Services;
 //using WebApi.Models;
 using System.Linq;
+using System.Net.Http;
 
 namespace WebApi.Controllers
 {
@@ -15,9 +16,10 @@ namespace WebApi.Controllers
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        private readonly IHttpClientFactory _clientFactory;
         [HttpGet]
         [Route("GetUsersList")]
-        public ActionResult GetUsersList()
+        public ActionResult GetUsersList(IHttpClientFactory _clientFactory)
         {
             return Ok(Summaries);
         }

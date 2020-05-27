@@ -4,6 +4,17 @@
         <name>SmartCore.WebApi</name>
     </assembly>
     <members>
+        <member name="T:SmartCore.WebApi.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
         <member name="M:SmartCore.WebApi.Program.CreateHostBuilder(System.String[])">
              <summary>
             
@@ -11,6 +22,41 @@
              <param name="args"></param>
              <remark>.NET CORE 内置一个IOC容器 用第三方IOC容器Autofac替代内置的</remark>
              <returns></returns>
+        </member>
+        <member name="T:SmartCore.WebApi.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:SmartCore.WebApi.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param> 
+        </member>
+        <member name="M:SmartCore.WebApi.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+        <member name="M:SmartCore.WebApi.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="containerBuilder"></param>
         </member>
     </members>
 </doc>

@@ -8,3 +8,5 @@
 /SmartCore.WebApi/obj
 /.vs
 /SmartCore.WebApi/.vs
+/SmartCore.Repository/obj
+/SmartCore.Repository/bin
