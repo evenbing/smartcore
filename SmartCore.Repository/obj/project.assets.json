@@ -28,13 +28,8 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
-      "BouncyCastle.NetCore/1.8.3": {
+      "BouncyCastle.NetCore/1.8.6": {
         "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.0",
-          "System.Reflection": "4.3.0",
-          "System.Reflection.TypeExtensions": "4.1.0"
-        },
         "compile": {
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
         },
@@ -1241,7 +1236,7 @@
           "System.Runtime": "4.3.0"
         },
         "compile": {
-          "ref/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
+          "ref/netstandard1.5/_._": {}
         },
         "runtime": {
           "lib/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
@@ -1911,6 +1906,7 @@
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "7.0.0",
+          "BouncyCastle.NetCore": "1.8.6",
           "Dapper": "2.0.35",
           "Dapper.Contrib": "2.0.35",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "3.1.4",
@@ -1961,14 +1957,14 @@
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.pdb"
       ]
     },
-    "BouncyCastle.NetCore/1.8.3": {
-      "sha512": "jAy3uHN1U9DpoT/TgLqDTEhlccn/4doOVxhSmmNsnoSsGfHT9Lwr634ac9D0YFujAhNw61nWF4UIpHyzv0aQww==",
+    "BouncyCastle.NetCore/1.8.6": {
+      "sha512": "l22IFT8GFYKxq+4yCl89yWVDCCRVHjXcDIHO3ufVPefaZxHrFgvecmbrlTZir9tXjPCxXXivhDJgcJFlmPLhqw==",
       "type": "package",
-      "path": "bouncycastle.netcore/1.8.3",
+      "path": "bouncycastle.netcore/1.8.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "bouncycastle.netcore.1.8.3.nupkg.sha512",
+        "bouncycastle.netcore.1.8.6.nupkg.sha512",
         "bouncycastle.netcore.nuspec",
         "lib/Mono/BouncyCastle.Crypto.dll",
         "lib/Mono/BouncyCastle.Crypto.xml",
@@ -1980,8 +1976,6 @@
         "lib/MonoTouch/BouncyCastle.Crypto.xml",
         "lib/net20/BouncyCastle.Crypto.dll",
         "lib/net20/BouncyCastle.Crypto.xml",
-        "lib/netstandard1.3/BouncyCastle.Crypto.dll",
-        "lib/netstandard1.3/BouncyCastle.Crypto.xml",
         "lib/netstandard2.0/BouncyCastle.Crypto.dll",
         "lib/netstandard2.0/BouncyCastle.Crypto.xml",
         "lib/xamarinios/BouncyCastle.Crypto.dll",

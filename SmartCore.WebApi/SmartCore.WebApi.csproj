@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartCore.Infrastructure\SmartCore.Infrastructure.csproj" />
     <ProjectReference Include="..\SmartCore.Middleware\SmartCore.Middleware.csproj" />
     <ProjectReference Include="..\SmartCore.Services\SmartCore.Services.csproj" />
   </ItemGroup>

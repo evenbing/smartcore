@@ -4,12 +4,23 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SmartCore.Middleware
 {
+    /// <summary>
+    /// ASP.NET Core WebApi 返回统一格式参数
+    /// </summary>
     public class WebApiResultMiddleware : ActionFilterAttribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is ValidationFailedResult)

@@ -101,6 +101,26 @@ namespace SmartCore.Infrastructure.Orm
             }
             return returnValue;
         }
+        private T UseDbConnection<T>(Func<IDbConnection, T> queryOrExecSqlFunc)
+        {
+            IDbConnection dbConn = null;
+
+            try
+            {
+                //Type modelType = typeof(T);
+                //var typeMap = Dapper.SqlMapper.GetTypeMap(modelType);
+                //if (typeMap == null || !(typeMap is ColumnAttributeTypeMapper<T>))
+                //{
+                //    Dapper.SqlMapper.SetTypeMap(modelType, new ColumnAttributeTypeMapper<T>());
+                //} 
+                dbConn = OpenConnection();  
+                return queryOrExecSqlFunc(dbConn);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            } 
+        } 
     }
 
     public enum DatabaseType

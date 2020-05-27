@@ -7,27 +7,39 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SmartCore.Infrastructure.Json;
 using SmartCore.Middleware;
+using SmartCore.Middleware.MiddlewareExtension;
 using Swashbuckle.AspNetCore.Swagger;
 namespace SmartCore.WebApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param> 
         public void ConfigureServices(IServiceCollection services)
         {
            
@@ -43,18 +55,19 @@ namespace SmartCore.WebApi
             }).AddNewtonsoftJson(options =>
             {
                 //默认 JSON 格式化程序基于 System.Text.Json
-                // Use the default property (Pascal) casing
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-
-                // Configure a custom converter
-                //options.SerializerSettings.Converters.Add(new MyCustomJsonConverter());
+                // Use the default property convert to lower
+                options.SerializerSettings.ContractResolver = new ToLowerPropertyNamesContractResolver();
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss"; 
             });
+
             #region Authentication
             services.AddTokenAuthentication(Configuration);
             #endregion
             #region HttpClientFactory
             services.AddHttpClient();
             #endregion
+
+
             #region Configure Swagger
             services.AddSwaggerGen(c =>
             {
@@ -91,8 +104,11 @@ namespace SmartCore.WebApi
             });
             #endregion
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.Use((context, next) =>
@@ -108,7 +124,8 @@ namespace SmartCore.WebApi
             {
                 app.UseDeveloperExceptionPage();
 
-            }
+            } 
+      
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -117,7 +134,7 @@ namespace SmartCore.WebApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseErrorHandling();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -125,7 +142,10 @@ namespace SmartCore.WebApi
             //app.UseSecurityMiddleware(); //Nifty encapsulation with the extension
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="containerBuilder"></param>
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
             //containerBuilder.RegisterType<ConnectionFactory>().As<IConnectionFactory>().InstancePerDependency();
@@ -160,6 +180,8 @@ namespace SmartCore.WebApi
         //    }
         //}
     }
+
+
     ///// <summary>
     ///// 拦截器 需要实现 IInterceptor接口 Intercept方法
     ///// </summary>
