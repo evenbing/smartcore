@@ -6,3 +6,6 @@ F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCo
 F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.dll
 F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.pdb
+F:\code\donetcore\smartcore\SmartCore.Repository\bin\Debug\netcoreapp3.1\SmartCore.Infrastructure.dll
+F:\code\donetcore\smartcore\SmartCore.Repository\bin\Debug\netcoreapp3.1\SmartCore.Infrastructure.pdb
+F:\code\donetcore\smartcore\SmartCore.Repository\obj\Debug\netcoreapp3.1\SmartCore.Repository.csproj.CopyComplete

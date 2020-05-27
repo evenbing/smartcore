@@ -82,14 +82,35 @@ namespace SmartCore.Infrastructure.Orm
             return CreateConnection(DatabaseType.SqlServer,ConnectionString);
         }
         #endregion
+
+        /// <summary>
+        /// 转换数据库类型
+        /// </summary>
+        /// <param name="databaseType">数据库类型</param>
+        /// <returns></returns>
+        private static DatabaseType GetDataBaseType(string databaseType)
+        {
+            DatabaseType returnValue = DatabaseType.SqlServer;
+            foreach (DatabaseType dbType in Enum.GetValues(typeof(DatabaseType)))
+            {
+                if (dbType.ToString().Equals(databaseType, StringComparison.OrdinalIgnoreCase))
+                {
+                    returnValue = dbType;
+                    break;
+                }
+            }
+            return returnValue;
+        }
     }
 
     public enum DatabaseType
     {
-        SqlServer,
-        MySql,
-        Oracle,
-        DB2
+        SqlServer,  //SQLServer数据库
+        MySql,      //Mysql数据库
+        Npgsql,     //PostgreSQL数据库
+        Oracle,     //Oracle数据库
+        Sqlite,     //SQLite数据库
+        DB2         //IBM DB2数据库
     }
 
 }
