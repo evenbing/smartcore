@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Net.Http;
 
-namespace WebApi.Controllers
+namespace SmartCore.WebApi
 {
     [Authorize]
     [ApiController]
@@ -16,25 +16,14 @@ namespace WebApi.Controllers
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-        private readonly IHttpClientFactory _clientFactory;
+       // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
         [HttpGet]
         [Route("GetUsersList")]
-        public ActionResult GetUsersList(IHttpClientFactory _clientFactory)
+        public ActionResult GetUsersList()
         {
             return Ok(Summaries);
         }
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
+    
         //private IUserService _userService;
 
         //public UsersController(IUserService userService)

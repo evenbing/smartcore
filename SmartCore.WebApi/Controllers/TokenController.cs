@@ -5,6 +5,9 @@ using SmartCore.Services;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class TokenController : ControllerBase
@@ -23,11 +26,18 @@ namespace WebApi.Controllers
         [HttpGet]
         public string GetRandomToken()
         {
-            var jwt = new JwtService(_config);
+            var jwt = new JwtService();
             var token = jwt.GenerateSecurityToken("fake@email.com");
             return token;
         }
 
-
+        [Route("GetRefreshToken")]
+        [HttpGet]
+        public string GetRefreshToken()
+        {
+            var jwt = new JwtService();
+            var token = jwt.GenerateSecurityToken("fake@email.com");
+            return token;
+        }
     }
 }

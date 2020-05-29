@@ -4,6 +4,58 @@
         <name>SmartCore.WebApi</name>
     </assembly>
     <members>
+        <member name="F:SmartCore.WebApi.AutofacComponent.container">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.AutofacComponent.InitAutoFac(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册组件
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.AutofacComponent.GetService``1">
+            <summary>
+            从容器中获取对象(Single)
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SmartCore.WebApi.AutofacComponent.GetScopeService``1">
+            <summary>
+            获取服务(请求生命周期内)
+            </summary>
+            <typeparam name="T">接口类型</typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SmartCore.WebApi.BaseApiController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartCore.WebApi.Controllers.System.BaseDataManmentController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartCore.WebApi.Controllers.System.BaseDataManmentController._sysDictServices">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.System.BaseDataManmentController.#ctor(SmartCore.Services.Sys.ISysDictServices)">
+            <summary>
+            
+            </summary>
+            <param name="sysDictServices"></param>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.System.BaseDataManmentController.DicList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SmartCore.WebApi.Program">
             <summary>
             
@@ -54,9 +106,25 @@
         </member>
         <member name="M:SmartCore.WebApi.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
             <summary>
+            IOC设置
+            </summary>
+            <param name="container"></param>
+        </member>
+        <member name="T:WebApi.Controllers.AdminController">
+            <summary>
             
             </summary>
-            <param name="containerBuilder"></param>
+        </member>
+        <member name="M:WebApi.Controllers.AdminController.GetControllers">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WebApi.Controllers.TokenController">
+            <summary>
+            
+            </summary>
         </member>
     </members>
 </doc>

@@ -69,7 +69,7 @@ namespace SmartCore.Repository.Base.Impl
         /// </summary>
         /// <param name="tableName">表名</param>
         /// <returns></returns>
-       public async Task<List<string>> GetColumnNameList(string tableName)
+        public async Task<List<string>> GetColumnNameList(string tableName)
         {
             string sql = "";
             string[] tableSchemaAndTable = tableName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -78,7 +78,8 @@ namespace SmartCore.Repository.Base.Impl
                 sql = "SELECT COLUMN_NAME  FROM information_schema.columns where TABLE_SCHEMA=@TableSchema AND TABLE_NAME=@TableName";
                 using (var dbConnection = ConnectionFactory.OpenConnection())
                 {
-                    return dbConnection.Query<string>(sql, new { TableSchema= tableSchemaAndTable[0], TableName = tableSchemaAndTable[1] }).AsList();
+                    var result = await dbConnection.QueryAsync<string>(sql, new { TableSchema = tableSchemaAndTable[0], TableName = tableSchemaAndTable[1] });
+                    return result.AsList();
                 }
             }
             else
@@ -86,10 +87,11 @@ namespace SmartCore.Repository.Base.Impl
                 sql = "SELECT COLUMN_NAME  FROM information_schema.columns where  TABLE_NAME=@TableName";
                 using (var dbConnection = ConnectionFactory.OpenConnection())
                 {
-                    return dbConnection.Query<string>(sql, new { TableName = tableName }).AsList();
+                    var result = await dbConnection.QueryAsync<string>(sql, new { TableName = tableName });
+                    return result.ToList();
                 }
-            } 
-        } 
+            }
+        }
         #endregion
 
         #region 私有方法
@@ -232,7 +234,7 @@ namespace SmartCore.Repository.Base.Impl
         /// <param name="dbConnection">数据库连接对象</param>
         /// <param name="sql">sql语句</param>
         /// <param name="paramters">动态参数</param>
-        /// <param name="transaction">事务对象 可空</param>
+        /// <param name="transaction">数据库事务对象 可空</param>
         /// <returns></returns>
         public async Task<bool> UpdateBySql(IDbConnection dbConnection, string sql, object paramters = null, IDbTransaction transaction = null)
         {
@@ -326,7 +328,7 @@ namespace SmartCore.Repository.Base.Impl
         /// </summary>
         /// <param name="dbConnection"></param>
         /// <param name="idList"></param>
-        /// <param name="transaction"></param>
+        /// <param name="transaction">数据库事务对象</param>
         /// <returns></returns>
         public async Task<bool> Delete(IDbConnection dbConnection, List<int> idList, IDbTransaction transaction = null)
         {
@@ -368,8 +370,8 @@ namespace SmartCore.Repository.Base.Impl
         /// 根据主键id获取单条实体信息
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <returns></returns>
         public async Task<TEntity> Get(long id, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -382,8 +384,8 @@ namespace SmartCore.Repository.Base.Impl
         /// 根据主键id获取单条实体信息
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <returns></returns>
         public async Task<TEntity> Get(string id, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -448,7 +450,7 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 根据id获取实体详细数据 返回数据字典
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">主键id</param>
         /// <returns></returns>
         public async Task<ConcurrentDictionary<string, object>> GetDictionary(dynamic id)
         {
@@ -475,6 +477,8 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <returns></returns>
         public async Task<List<TEntity>> QueryAllList(IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -487,7 +491,9 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="whereExpression"></param>
+        /// <param name="whereExpression">linq条件表达式</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <returns></returns>
         public async Task<List<TEntity>> QueryList(Expression<Func<TEntity, bool>> whereExpression, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -500,34 +506,82 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
         /// <returns></returns>
         public async Task<List<TEntity>> QueryList(string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
             using (var dbConnection = ConnectionFactory.OpenConnection())
             {
-                var result = await dbConnection.QueryAsync<TEntity>(sql, parameters, null, null, commandType);
-                return result.AsList();
+                var result = await dbConnection.QueryAsync<TEntity>(sql, parameters, transaction, commandTimeout, commandType);
+                return result.ToList();
             }
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="commandType"></param>
+        /// <param name="dbConnection">数据库连接对象</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
+        /// <returns></returns>
+        public async Task<List<TEntity>> QueryList(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
+        {
+            var result = await dbConnection.QueryAsync<TEntity>(sql, parameters, transaction, commandTimeout, commandType);
+            return result.ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
+        /// <returns></returns>
+        public async Task<List<T>> QueryList<T>(string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
+        {
+            using (var dbConnection = ConnectionFactory.OpenConnection())
+            {
+                var result = await dbConnection.QueryAsync<T>(sql, parameters, transaction, commandTimeout, commandType);
+                return result.ToList();
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbConnection">数据库连接对象</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
+        /// <returns></returns>
+        public async Task<List<T>> QueryList<T>(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
+        {
+            var result = await dbConnection.QueryAsync<T>(sql, parameters, transaction, commandTimeout, commandType);
+            return result.ToList();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<ConcurrentBag<TEntity>> QueryConcurrentBag(string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
-        {
-            //using (var dbConnection = ConnectionFactory.OpenConnection())
-            //{
-            //    var result = await dbConnection.QueryAsync<TEntity>(sql, parameters, null, null, commandType);
-            //    return result;
-            //}
-            return new ConcurrentBag<TEntity>();
+        { 
+            using (var dbConnection = ConnectionFactory.OpenConnection())
+            {
+                var result = await dbConnection.QueryAsync<TEntity>(sql, parameters, transaction, commandTimeout, commandType);
+                ConcurrentBag<TEntity> list = new ConcurrentBag<TEntity>(result);
+                return list;
+            } 
         }
         #endregion
 
@@ -538,11 +592,12 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TypeValue"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param> 
+        /// <param name="dbTransaction">数据库事务对象</param>
         /// <param name="commandTimeout">命令执行超时时间</param>
-        /// <param name="commandType">命令脚本类型 一般分为Command.Text和CommandType.StoredProcedure</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<T> ExecuteScalar<T>(string sql, object parameters = null, IDbTransaction dbTransaction = null,
          int? commandTimeout = null, CommandType? commandType = null)
@@ -562,7 +617,7 @@ namespace SmartCore.Repository.Base.Impl
         /// <param name="parameters">动态参数</param>
         /// <param name="dbTransaction">数据库事务对象</param>
         /// <param name="commandTimeout">命令执行超时时间</param>
-        /// <param name="commandType">命令脚本类型 一般分为Command.Text和CommandType.StoredProcedure</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<T> ExecuteScalar<T>(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction dbTransaction = null,
      int? commandTimeout = null, CommandType? commandType = null)
@@ -576,7 +631,9 @@ namespace SmartCore.Repository.Base.Impl
         /// </summary>
         /// <param name="sql">sql语句</param>
         /// <param name="parameters">动态参数</param>
-        /// <param name="command">执行命令类型 text和存储过程</param>
+        /// <param name="dbTransaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param> 
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<string> ExecuteScalarToStr(string sql, object parameters = null, IDbTransaction dbTransaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
@@ -590,8 +647,10 @@ namespace SmartCore.Repository.Base.Impl
         /// 
         /// </summary>
         /// <param name="dbConnection">数据库连接对象</param>
-        /// <param name="sql">sql语句</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
+        /// <param name="dbTransaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <param name="command">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<string> ExecuteScalarToStr(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction dbTransaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
@@ -602,8 +661,10 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sql">sql语句</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
+        /// <param name="dbTransaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <param name="command">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<int> ExecuteScalarToInt(string sql, object parameters = null, IDbTransaction dbTransaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
@@ -618,9 +679,11 @@ namespace SmartCore.Repository.Base.Impl
         /// 
         /// </summary>
         /// <param name="conn">数据库连接对象</param>
-        /// <param name="sql">sql语句</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
-        /// <param name="command">执行命令类型 text和存储过程</param>
+        /// <param name="dbTransaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<int> ExecuteScalarToInt(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction dbTransaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
@@ -634,8 +697,11 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 获取Datable
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<DataTable> QueryTable(string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
@@ -652,9 +718,12 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 获取Datable
         /// </summary>
-        /// <param name="dbConnection"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="dbConnection">数据库连接对象</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
+        /// <param name="parameters">动态参数</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
         public async Task<DataTable> QueryTable(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
@@ -668,15 +737,16 @@ namespace SmartCore.Repository.Base.Impl
 
         #endregion
 
-   
+
         #endregion
 
         #region 执行sql语句
         /// <summary>
         /// 执行sql 返回自增id，一般由于sql语句插入到数据表中
         /// </summary>
-        /// <param name="sql">执行sql</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns>返回自增id</returns>
         public async Task<long> ExcuteAndReturnId(string sql, object parameters = null, CommandType commandType = CommandType.Text)
         {
@@ -698,18 +768,19 @@ namespace SmartCore.Repository.Base.Impl
         /// <summary>
         /// 执行sql语句
         /// </summary>
-        /// <param name="sql">sql语句</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
-        /// <param name="transaction"></param>
-        /// <param name="outTime">命令执行超时时间</param> 
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param> 
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
-        public async Task<int> Execute(string sql, object parameters = null, IDbTransaction transaction = null, int? outTime = null, CommandType commandType = CommandType.Text)
+        public async Task<int> Execute(string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
             if (!string.IsNullOrEmpty(sql))
             {
                 using (var dbConnection = ConnectionFactory.OpenConnection())
                 {
-                    return await dbConnection.ExecuteAsync(sql, parameters, transaction, outTime, commandType);
+                    return await dbConnection.ExecuteAsync(sql, parameters, transaction, commandTimeout, commandType);
                 }
             }
             throw new ArgumentException("sql语句为空");
@@ -718,15 +789,17 @@ namespace SmartCore.Repository.Base.Impl
         /// 执行sql语句
         /// </summary>
         /// <param name="dbConnection">数据库连接对象</param>
-        /// <param name="sql">sql语句</param>
+        /// <param name="sql">sql语句或者存储过程名称 存储过程需要指定CommandType=CommandType.StoredProcedure</param>
         /// <param name="parameters">动态参数</param>
-        /// <param name="outTime">命令执行超时时间</param>
+        /// <param name="transaction">数据库事务对象</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
+        /// <param name="commandType">执行命令类型 text和存储过程</param>
         /// <returns></returns>
-        public async Task<int> Execute(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction transaction = null, int? outTime = null, CommandType commandType = CommandType.Text)
+        public async Task<int> Execute(IDbConnection dbConnection, string sql, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType commandType = CommandType.Text)
         {
             if (!string.IsNullOrEmpty(sql))
             {
-                return await dbConnection.ExecuteAsync(sql, parameters, transaction, outTime, commandType);
+                return await dbConnection.ExecuteAsync(sql, parameters, transaction, commandTimeout, commandType);
             }
             throw new ArgumentException("sql语句为空");
         }
@@ -735,15 +808,15 @@ namespace SmartCore.Repository.Base.Impl
         /// </summary>
         /// <param name="procName">存储过程名称</param>
         /// <param name="parameters">动态参数</param>
-        /// <param name="outTime">命令执行超时时间</param>
+        /// <param name="commandTimeout">命令执行超时时间</param>
         /// <returns></returns>
-        public async Task<int> ExecuteProc(string procName, object parameters = null, IDbTransaction transaction = null, int? outTime = null)
+        public async Task<int> ExecuteProc(string procName, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             if (!string.IsNullOrEmpty(procName))
             {
                 using (var dbConnection = ConnectionFactory.OpenConnection())
                 {
-                    return await dbConnection.ExecuteAsync(procName, parameters, transaction, outTime, CommandType.StoredProcedure);
+                    return await dbConnection.ExecuteAsync(procName, parameters, transaction, commandTimeout, CommandType.StoredProcedure);
                 }
             }
             throw new ArgumentException("存储过程为空");
@@ -757,11 +830,11 @@ namespace SmartCore.Repository.Base.Impl
         /// <param name="transaction">数据库事务对象</param>
         /// <param name="outTime">命令执行超时时间</param>
         /// <returns></returns>
-        public async Task<int> ExecuteProc(IDbConnection dbConnection, string procName, object parameters = null, IDbTransaction transaction = null, int? outTime = null)
+        public async Task<int> ExecuteProc(IDbConnection dbConnection, string procName, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             if (!string.IsNullOrEmpty(procName))
             {
-                return await dbConnection.ExecuteAsync(procName, parameters, transaction, outTime, CommandType.StoredProcedure);
+                return await dbConnection.ExecuteAsync(procName, parameters, transaction, commandTimeout, CommandType.StoredProcedure);
             }
             throw new ArgumentException("存储过程为空");
         }

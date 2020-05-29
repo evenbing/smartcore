@@ -5,8 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,8 @@ using Newtonsoft.Json.Serialization;
 using SmartCore.Infrastructure.Json;
 using SmartCore.Middleware;
 using SmartCore.Middleware.MiddlewareExtension;
+using SmartCore.Repository.Base;
+using SmartCore.Repository.Base.Impl;
 using Swashbuckle.AspNetCore.Swagger;
 namespace SmartCore.WebApi
 {
@@ -42,7 +46,7 @@ namespace SmartCore.WebApi
         /// <param name="services"></param> 
         public void ConfigureServices(IServiceCollection services)
         {
-           
+
             services.AddControllers(options =>
             {
                 // requires using Microsoft.AspNetCore.Mvc.Formatters;
@@ -57,17 +61,16 @@ namespace SmartCore.WebApi
                 //默认 JSON 格式化程序基于 System.Text.Json
                 // Use the default property convert to lower
                 options.SerializerSettings.ContractResolver = new ToLowerPropertyNamesContractResolver();
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss"; 
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
 
             #region Authentication
             services.AddTokenAuthentication(Configuration);
             #endregion
-            #region HttpClientFactory
-            services.AddHttpClient();
-            #endregion
-
-
+            //#region HttpClientFactory
+            //services.AddHttpClient();
+            //#endregion
+             
             #region Configure Swagger
             services.AddSwaggerGen(c =>
             {
@@ -83,8 +86,8 @@ namespace SmartCore.WebApi
                     //JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",//Jwt default param name
-                    In=Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Type=Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
@@ -102,7 +105,7 @@ namespace SmartCore.WebApi
                 }
             });
             });
-            #endregion
+            #endregion 
         }
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,14 +121,11 @@ namespace SmartCore.WebApi
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
-            //app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection(); 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-
+                app.UseDeveloperExceptionPage(); 
             } 
-      
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -138,77 +138,21 @@ namespace SmartCore.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            //app.UseSecurityMiddleware(); //Nifty encapsulation with the extension
-
-        }
+            }); 
+        }  
         /// <summary>
-        /// 
+        /// IOC设置
         /// </summary>
-        /// <param name="containerBuilder"></param>
-        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        /// <param name="container"></param>
+        public void ConfigureContainer(ContainerBuilder container)
         {
-            //containerBuilder.RegisterType<ConnectionFactory>().As<IConnectionFactory>().InstancePerDependency();
-
-            List<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-            var repositoryAssembly = assemblies.FirstOrDefault(p => p.FullName.EndsWith("Repository"));
-            if (repositoryAssembly != null)
-            {
-                //指定已扫描程序集中的类型注册为提供所有其实现的接口。
-                containerBuilder.RegisterAssemblyTypes(repositoryAssembly).Where(t => t.Name.EndsWith("Repository")).
-                 AsImplementedInterfaces().InstancePerDependency();
-
-            }
-            var servicesAssembly = assemblies.FirstOrDefault(p => p.FullName.EndsWith("Services"));
-            if (servicesAssembly != null)
-            {
-                //指定已扫描程序集中的类型注册为提供所有其实现的接口。
-                containerBuilder.RegisterAssemblyTypes(repositoryAssembly).Where(t => t.Name.EndsWith("Services")).
-                 AsImplementedInterfaces().InstancePerDependency();
-            }
-            //  // 把容器装入到微软默认的依赖注入容器中
-            //containerBuilder.Build();
-            //Configuration.DependencyResolver= new AutofacWebApiDependencyResolver(container);
-            //动态注入拦截器CallLogger 启用类代理拦截
-            //containerBuilder.Register(c => new CallLogger(Console.Out));
+            Assembly assemblyRepository = Assembly.Load("SmartCore.Repository");
+            Assembly assemblyServices = Assembly.Load("SmartCore.Services");
+            container.RegisterAssemblyTypes(assemblyRepository).AsImplementedInterfaces();//.Where(t => t.Name.EndsWith("Repository")).AsImplementedInterfaces();
+            container.RegisterAssemblyTypes(assemblyServices).AsImplementedInterfaces();
+            //属性注入
+            container.RegisterAssemblyTypes(typeof(Program).Assembly).PropertiesAutowired();
+            container.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IBaseRepository<>)).InstancePerDependency();
         }
-        //public static class SecurityMiddlewareExtensions
-        //{
-        //    public static IApplicationBuilder UseSecurityMiddleware(this IApplicationBuilder builder)
-        //    {
-        //        return builder.UseMiddleware<SecurityMiddleware>();
-        //    }
-        //}
-    }
-
-
-    ///// <summary>
-    ///// 拦截器 需要实现 IInterceptor接口 Intercept方法
-    ///// </summary>
-    //public class CallLogger : IInterceptor
-    //{
-    //    TextWriter _output;
-
-    //    public CallLogger(TextWriter output)
-    //    {
-    //        _output = output;
-    //    }
-
-    //    /// <summary>
-    //    /// 拦截方法 打印被拦截的方法执行前的名称、参数和方法执行后的 返回结果
-    //    /// </summary>
-    //    /// <param name="invocation">包含被拦截方法的信息</param>
-    //    public void Intercept(IInvocation invocation)
-    //    {
-
-    //        _output.WriteLine("你正在调用方法 \"{0}\"  参数是 {1}... ",
-    //          invocation.Method.Name,
-    //          string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray()));
-
-    //        //在被拦截的方法执行完毕后 继续执行
-    //        invocation.Proceed();
-
-    //        _output.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue);
-    //    }
-    //}
+    } 
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartCore.Infrastructure.Config;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -7,11 +8,16 @@ namespace SmartCore.Infrastructure.Orm
 {
     public class ConnectionFactory
     {
+        private static DbConfig dbConfig= new DbConfig();
+        static ConnectionFactory()
+        {
+            dbConfig = ConfigUtil.GetAppSettings<DbConfig>("DbConfig"); 
+        }
         #region 全局变量
         /// <summary>
         /// 主库数据库连接字符串 from 配置文件
         /// </summary>
-        private static readonly string connectionString = "";// Geely.Com.Config.BaseConfigs.AppMasterDbConnection;
+       // private static readonly string connectionString = ConfigUtil.GetConfigValueByKey();
         #endregion
 
         #region 属性
@@ -20,14 +26,18 @@ namespace SmartCore.Infrastructure.Orm
         /// </summary>
         public static string ConnectionString
         {
-            get { return ""; }
+            get { return dbConfig.AppMasterDbConnection; }
         }
         /// <summary>
         /// end库连接字符串 属性  from 配置文件
         /// </summary>
-        public static string EndDbConnectionString
+        public static string SlaveDbConnectionString
         {
-            get { return ""; }
+            get { return dbConfig.AppSlaveDbConnection; }
+        }
+        public static string CurrentDatabaseType
+        {
+            get { return dbConfig.DatabaseType; }
         }
         #endregion
 
@@ -79,7 +89,8 @@ namespace SmartCore.Infrastructure.Orm
         /// <returns></returns>
         public static IDbConnection OpenConnection()
         {
-            return CreateConnection(DatabaseType.SqlServer,ConnectionString);
+            var dbType = GetDataBaseType(CurrentDatabaseType);
+            return CreateConnection(dbType, ConnectionString);
         }
         #endregion
 
