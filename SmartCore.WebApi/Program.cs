@@ -30,10 +30,11 @@ namespace SmartCore.WebApi
         /// <remark>.NET CORE 内置一个IOC容器 用第三方IOC容器Autofac替代内置的</remark>
         /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
+        /////
     }
 }

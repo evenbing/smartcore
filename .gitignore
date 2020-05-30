@@ -10,3 +10,5 @@
 /SmartCore.WebApi/.vs
 /SmartCore.Repository/obj
 /SmartCore.Repository/bin
+/SmartCore.Models/obj
+/SmartCore.Models/bin

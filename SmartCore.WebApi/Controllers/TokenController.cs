@@ -1,10 +1,14 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SmartCore.Models.DTO;
 using SmartCore.Services;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class TokenController : ControllerBase
@@ -23,11 +27,21 @@ namespace WebApi.Controllers
         [HttpGet]
         public string GetRandomToken()
         {
-            var jwt = new JwtService(_config);
-            var token = jwt.GenerateSecurityToken("fake@email.com");
+            var jwt = new JwtService();
+            UserTokenDTO userTokenDTO = new UserTokenDTO();
+            var token = jwt.GenerateSecurityToken(userTokenDTO);
             return token;
         }
 
-
+        [Route("GetRefreshToken")]
+        [HttpGet]
+        public string GetRefreshToken()
+        {
+            var jwt = new JwtService(); 
+            UserTokenDTO userTokenDTO = new UserTokenDTO();
+            userTokenDTO.Email = "wenbin.ye@winbean.com";
+            var token = jwt.GenerateSecurityToken(userTokenDTO);
+            return token;
+        }
     }
 }
