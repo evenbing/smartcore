@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using SmartCore.Infrastructure.Config;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using SmartCore.Models.DTO;
 
 namespace SmartCore.Services
 {
@@ -17,7 +18,7 @@ namespace SmartCore.Services
         public JwtService()
         {
             tokenSetting = ConfigUtil.GetAppSettings<TokenManagement>("JwtConfig");
-            GetSecret();
+            //GetSecret();
         }
         /// <summary>
         /// 获取到加密串
@@ -38,7 +39,7 @@ namespace SmartCore.Services
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public string GenerateSecurityToken(string email)
+        public string GenerateSecurityToken(UserTokenDTO userTokenDTO)
         {
 
             var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
@@ -48,12 +49,12 @@ namespace SmartCore.Services
                 Audience = tokenSetting.Audience,
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                     new Claim(JwtRegisteredClaimNames.Iat, $"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}"),
                     new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role,""),
-                     new Claim(ClaimTypes.Expiration,DateTime.Now.AddMinutes(tokenSetting.AccessExpiration  ).ToString()),
+                    new Claim(ClaimTypes.Email, userTokenDTO.Email),
+                    new Claim(ClaimTypes.Role,userTokenDTO.UserRole),
+                     new Claim(ClaimTypes.Expiration,DateTime.Now.AddMinutes(tokenSetting.AccessExpiration).ToString()),
                        //这个Role是官方UseAuthentication要要验证的Role，我们就不用手动设置Role这个属性了
                     //new Claim(ClaimTypes.Role,tokenModel.Role)
                 }),
