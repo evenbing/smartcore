@@ -39,7 +39,7 @@ namespace SmartCore.Services
                 requestUri = string.Concat(requestUri, '?', strParam);
             }
             client.BaseAddress = new Uri(requestUri);
-            return client.GetStringAsync(requestUri).Result;
+            return await client.GetStringAsync(requestUri);
             //var response = await client.SendAsync(request);
 
             //if (response.IsSuccessStatusCode)

@@ -4,6 +4,11 @@
         <name>SmartCore.WebApi</name>
     </assembly>
     <members>
+        <member name="T:SmartCore.WebApi.AutofacComponent">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:SmartCore.WebApi.AutofacComponent.container">
             <summary>
             
@@ -110,6 +115,15 @@
             </summary>
             <param name="container"></param>
         </member>
+        <member name="M:Demo.Jwt.Controllers.AuthController.CheckAccount(System.String,System.String,System.String@)">
+            <summary>
+            模拟登陆校验，因为是模拟，所以逻辑很‘模拟’
+            </summary>
+            <param name="userName"></param>
+            <param name="pwd"></param>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
         <member name="T:WebApi.Controllers.AdminController">
             <summary>
             
@@ -125,6 +139,17 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="F:WebApi.Controllers.TokenController._jwtServices">
+            <summary>
+            Jwt 服务
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.TokenController.#ctor(SmartCore.Services.IJwtServices)">
+            <summary>
+            
+            </summary>
+            <param name="jwtServices"></param>
         </member>
     </members>
 </doc>

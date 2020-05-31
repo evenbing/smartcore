@@ -9,6 +9,9 @@ using SmartCore.Repository.Base.Impl;
 
 namespace SmartCore.WebApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AutofacComponent
     {  
         /// <summary>

@@ -20,6 +20,7 @@ using SmartCore.Middleware;
 using SmartCore.Middleware.MiddlewareExtension;
 using SmartCore.Repository.Base;
 using SmartCore.Repository.Base.Impl;
+using SmartCore.Services;
 using Swashbuckle.AspNetCore.Swagger;
 namespace SmartCore.WebApi
 {
@@ -68,9 +69,10 @@ namespace SmartCore.WebApi
             services.AddTokenAuthentication(Configuration);
             #endregion
             //#region HttpClientFactory
-            //services.AddHttpClient();
+            services.AddHttpClient();
             //#endregion
-             
+            services.AddHttpContextAccessor();
+
             #region Configure Swagger
             services.AddSwaggerGen(c =>
             {
@@ -117,7 +119,8 @@ namespace SmartCore.WebApi
             app.Use((context, next) =>
             {
                 //Do some work here
-                context.Response.Headers.Add("X-WorkId", "127.0.0.1");
+                context.Response.Headers.Add("X-SererName", "127.0.0.1");
+                context.Response.Headers.Add("X-Correlation-ID", "127.0.0.1"); 
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
@@ -151,8 +154,9 @@ namespace SmartCore.WebApi
             container.RegisterAssemblyTypes(assemblyRepository).AsImplementedInterfaces();//.Where(t => t.Name.EndsWith("Repository")).AsImplementedInterfaces();
             container.RegisterAssemblyTypes(assemblyServices).AsImplementedInterfaces();
             // Ù–‘◊¢»Î
-            container.RegisterAssemblyTypes(typeof(Program).Assembly).PropertiesAutowired();
+            container.RegisterAssemblyTypes(typeof(Startup).Assembly).PropertiesAutowired();
             container.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IBaseRepository<>)).InstancePerDependency();
+            //container.RegisterType<JwtServices>().As<IJwtServices>().AsImplementedInterfaces();
         }
     } 
 }
