@@ -151,5 +151,11 @@
             </summary>
             <param name="jwtServices"></param>
         </member>
+        <member name="M:WebApi.Controllers.TokenController.GetRandomToken">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -20,7 +20,8 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 私有变量 ConnectionMultiplexer
         /// </summary>
-        private static ConnectionMultiplexer _instance = null;
+        private  volatile ConnectionMultiplexer _instance = null; 
+
         /// <summary>
         /// 默认数据库下标
         /// </summary>
@@ -28,13 +29,13 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 线程锁
         /// </summary>
-        private static object _locker = new Object();
+        private readonly object _locker = new object();
         #endregion
         #region ConnectionMultiplexer管理
         /// <summary>
         /// 
         /// </summary>
-        public static ConnectionMultiplexer Instance
+        public  ConnectionMultiplexer Instance
         {
             get
             {
@@ -57,7 +58,7 @@ namespace SmartCore.Infrastructure.Redis
         /// 
         /// </summary>
         /// <returns></returns>
-        private static ConnectionMultiplexer CreateManager()
+        private  ConnectionMultiplexer CreateManager()
         {
             var options = ConfigurationOptions.Parse(string.Join(",", configInfo.Hosts));
             if (!string.IsNullOrEmpty(configInfo.Password))
@@ -65,7 +66,7 @@ namespace SmartCore.Infrastructure.Redis
                 options.Password = configInfo.Password;
             }
             options.SyncTimeout = configInfo.SyncTimeout;
-            options.ConnectTimeout = configInfo.ConnectTimeout;
+            options.ConnectTimeout = configInfo.ConnectTimeout;//15000标识15s
             options.KeepAlive = 180;
             options.AbortOnConnectFail = false;
 

@@ -7,8 +7,11 @@ namespace SmartCore.WebApi
   /// <summary>
   /// 
   /// </summary>
-    public class BaseApiController : ControllerBase
+    public abstract class BaseApiController : ControllerBase
     {
-        
+        /// <summary>
+        /// 会话
+        /// </summary>
+        public virtual ISession Session => Sessions.Session.Instance;
     }
 }

@@ -34,7 +34,7 @@ namespace SmartCore.Middleware
             {
                 //获取权限是否需要HTTPS 
                 x.RequireHttpsMetadata = false; 
-                x.SecurityTokenValidators.Clear();
+                //x.SecurityTokenValidators.Clear();
                 //x.SecurityTokenValidators.Add(new CustomJwtSecurityTokenHandler());//services.BuildServiceProvider()
                 //在成功的授权之后令牌是否应该存储在Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties中
                 x.SaveToken = true;
@@ -89,7 +89,7 @@ namespace SmartCore.Middleware
                         //自定义返回的数据类型
                         context.Response.ContentType = "application/json";
                         //自定义返回状态码，默认为401 我这里改成 200
-                        context.Response.StatusCode = StatusCodes.Status200OK;
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         //自定义自己想要返回的数据结果，我这里要返回的是Json对象，通过引用Newtonsoft.Json库进行转换
                         var result = new ApiResultModels();
                         result.Code = context.Response.StatusCode.ToString();

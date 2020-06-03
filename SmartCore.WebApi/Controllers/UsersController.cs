@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 //using WebApi.Models;
 using System.Linq;
 using System.Net.Http;
+using SmartCore.Services;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace SmartCore.WebApi
 {
@@ -16,12 +21,25 @@ namespace SmartCore.WebApi
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-       // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
-        [HttpGet]
-        [Route("GetUsersList")]
-        public ActionResult GetUsersList()
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UsersController(IHttpContextAccessor httpContextAccessor)
         {
-            return Ok(Summaries);
+            _httpContextAccessor = httpContextAccessor;
+        }
+    // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
+            [HttpGet]
+        [Route("GetUsersList")]
+        public async Task<IActionResult> GetUsersList()
+        {
+            var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync();//获取登录用户的AuthenticateResult
+            if (auth.Succeeded)
+            {
+                bool IsAuthenticated = HttpContext.User.Identity.IsAuthenticated;
+                
+                   var userCli = auth.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                return Ok(userCli.Value);
+            }
+                return Ok(null);
         }
     
         //private IUserService _userService;

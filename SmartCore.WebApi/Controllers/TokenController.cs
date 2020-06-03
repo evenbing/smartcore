@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartCore.Models.DTO;
 using SmartCore.Services;
 using SmartCore.WebApi;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -31,14 +32,18 @@ namespace WebApi.Controllers
             //_config = config;
             _jwtServices = jwtServices;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Route("GetRandomToken")]
         [HttpGet]
-        public string GetRandomToken()
+        public async Task<IActionResult> GetRandomToken()
         { 
             UserTokenDTO userTokenDTO = new UserTokenDTO();
             userTokenDTO.Email = "wenbin.ye@winbean.com";
-            var token = _jwtServices.GenerateSecurityToken(userTokenDTO);
-            return token;
+            var token =await _jwtServices.GenerateSecurityToken(userTokenDTO);
+            return Ok(token);
         }
         //[Route("GetTokenForTest")]
         //[HttpGet]

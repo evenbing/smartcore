@@ -11,11 +11,16 @@ using SmartCore.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Threading.Tasks;
 
 namespace SmartCore.Services
 {
-    public interface IJwtServices {
-        string GenerateSecurityToken(UserTokenDTO userTokenDTO);
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IJwtServices 
+    {
+         Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO);
     }
     public class JwtServices: IJwtServices
     {
@@ -56,13 +61,14 @@ namespace SmartCore.Services
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public string GenerateSecurityToken(UserTokenDTO userTokenDTO)
+        public async Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO)
         {
             //每次登陆动态刷新
             Const.ValidAudience = userTokenDTO.Id + userTokenDTO.UserPass + DateTime.Now.ToString();
             DateTime nowTime = DateTime.UtcNow;
             long currentTimeStamp = new DateTimeOffset(nowTime).ToUnixTimeSeconds();
             long expiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.AccessExpiration)).ToUnixTimeSeconds();
+            long refreshExpiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.RefreshExpiration)).ToUnixTimeSeconds();
             var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
             //将用户信息添加到 Claim 中
             var claimsIdentity = new ClaimsIdentity(new[]
@@ -73,9 +79,9 @@ namespace SmartCore.Services
                       new Claim(JwtRegisteredClaimNames.Exp,$"{expiredTimeStamp}")  ,
                     new Claim(ClaimTypes.Email, userTokenDTO.Email),
                     new Claim(ClaimTypes.Role,userTokenDTO.UserRole??""),
-                    new Claim(ClaimTypes.NameIdentifier,userTokenDTO.UserName??""),//这里存的是aes加密后的用户主键id
+                    new Claim(ClaimTypes.NameIdentifier,userTokenDTO.Id.ToString()+"999999999999"),//这里存的是aes加密后的用户主键id
                      new Claim(ClaimTypes.Expiration,expiredTimeStamp.ToString())
-                }); 
+                });
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = tokenSetting.Issuer,
@@ -86,13 +92,18 @@ namespace SmartCore.Services
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            if (_httpContextAccessor != null)
+            //签发一个加密后的用户信息凭证，用来标识用户的身份 
+            var defaultScheme =  JwtBearerDefaults.AuthenticationScheme;
+            //await _httpContextAccessor.HttpContext.SignInAsync(defaultScheme, new ClaimsPrincipal(claimsIdentity));
+            string refreshToken = Guid.NewGuid().ToString("N");
+            var result= new JwtAuthorizationDTO
             {
-                //签发一个加密后的用户信息凭证，用来标识用户的身份 
-                _httpContextAccessor.HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity)); 
-            } 
-            return tokenHandler.WriteToken(token);
-
+                id = userTokenDTO.Id.ToString(),
+                token_type = "Bearer",
+                access_token = new AccessToken { token = tokenHandler.WriteToken(token),expired= expiredTimeStamp, expires_in= tokenSetting.AccessExpiration },
+                refresh_token = new AccessToken { token = refreshToken, expired = refreshExpiredTimeStamp, expires_in = tokenSetting.RefreshExpiration }
+            };
+            return await Task.FromResult(result);
         }
         ///// <summary>
         ///// 

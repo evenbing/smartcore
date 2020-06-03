@@ -120,20 +120,23 @@ namespace SmartCore.WebApi
             {
                 //Do some work here
                 context.Response.Headers.Add("X-SererName", "127.0.0.1");
-                context.Response.Headers.Add("X-Correlation-ID", "127.0.0.1"); 
+                context.Response.Headers.Add("X-Correlation-ID", "127.0.0.1");
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
             //app.UseHttpsRedirection(); 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage(); 
-            } 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+                app.UseDeveloperExceptionPage();
+            }
+            else if (!env.IsProduction())
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
+            }
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -141,8 +144,8 @@ namespace SmartCore.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            }); 
-        }  
+            });
+        }
         /// <summary>
         /// IOC…Ë÷√
         /// </summary>
@@ -158,5 +161,5 @@ namespace SmartCore.WebApi
             container.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IBaseRepository<>)).InstancePerDependency();
             //container.RegisterType<JwtServices>().As<IJwtServices>().AsImplementedInterfaces();
         }
-    } 
+    }
 }
