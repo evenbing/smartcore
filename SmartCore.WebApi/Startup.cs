@@ -1,27 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using SmartCore.Infrastructure;
 using SmartCore.Infrastructure.Json;
 using SmartCore.Middleware;
 using SmartCore.Middleware.MiddlewareExtension;
 using SmartCore.Repository.Base;
 using SmartCore.Repository.Base.Impl;
-using SmartCore.Services;
-using Swashbuckle.AspNetCore.Swagger;
 namespace SmartCore.WebApi
 {
     /// <summary>
@@ -118,9 +110,9 @@ namespace SmartCore.WebApi
         {
             app.Use((context, next) =>
             {
-                //Do some work here
-                context.Response.Headers.Add("X-SererName", "127.0.0.1");
-                context.Response.Headers.Add("X-Correlation-ID", "127.0.0.1");
+                //Do some work here System.Environment.MachineName
+                context.Response.Headers.Add("X-SererName",Common.MachineNameWithHide);
+                context.Response.Headers.Add("X-TraceId", context?.TraceIdentifier);
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
@@ -128,6 +120,11 @@ namespace SmartCore.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
             }
             else if (!env.IsProduction())
             {

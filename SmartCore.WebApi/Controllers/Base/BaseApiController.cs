@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using SmartCore.Infrastructure;
 
 namespace SmartCore.WebApi
 {
@@ -9,9 +10,6 @@ namespace SmartCore.WebApi
   /// </summary>
     public abstract class BaseApiController : ControllerBase
     {
-        /// <summary>
-        /// 会话
-        /// </summary>
-        public virtual ISession Session => Sessions.Session.Instance;
+        
     }
 }

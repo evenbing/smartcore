@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SmartCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,10 +60,17 @@ namespace SmartCore.Middleware
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="statusCode"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static Task HandleExceptionAsync(HttpContext context, int statusCode, string message)
         {
-            var data = new { code = statusCode.ToString(),success = false, message = message };
+            string traceId = context?.TraceIdentifier;
+            var data = new ApiResultModels{ code = statusCode, message = message };
             var result = JsonConvert.SerializeObject(data);
             context.Response.ContentType = "application/json;charset=utf-8";
             return context.Response.WriteAsync(result);

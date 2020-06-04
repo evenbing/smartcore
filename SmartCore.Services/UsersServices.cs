@@ -12,6 +12,7 @@ namespace SmartCore.Services
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        //[Required(ErrorMessage = "用户名称不能为空")]
         public string Username { get; set; }
          //[JsonIngore]
         public string Password { get; set; }

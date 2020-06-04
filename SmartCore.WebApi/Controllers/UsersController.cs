@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using SmartCore.Infrastructure;
 
 namespace SmartCore.WebApi
 {
@@ -21,16 +22,28 @@ namespace SmartCore.WebApi
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpContextAccessor"></param>
         public UsersController(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
     // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
-            [HttpGet]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         [Route("GetUsersList")]
         public async Task<IActionResult> GetUsersList()
         {
+            var id = WebHelper.HttpContext?.TraceIdentifier;
             var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync();//获取登录用户的AuthenticateResult
             if (auth.Succeeded)
             {
@@ -41,31 +54,11 @@ namespace SmartCore.WebApi
             }
                 return Ok(null);
         }
-    
-        //private IUserService _userService;
-
-        //public UsersController(IUserService userService)
-        //{
-        //    _userService = userService;
-        //}
-
-        //[AllowAnonymous]
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate([FromBody]AuthenticateModel model)
-        //{
-        //    var user = _userService.Authenticate(model.Username, model.Password);
-
-        //    if (user == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-
-        //    return Ok(user);
-        //}
-
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var users = _userService.GetAll();
-        //    return Ok(users);
+        //[HttpPost]
+        //[Route("SaveUserInfo")]
+        //public async Task<IActionResult> SaveUserInfo([FromBody]User user)
+        //{ 
+            
         //}
     }
 }

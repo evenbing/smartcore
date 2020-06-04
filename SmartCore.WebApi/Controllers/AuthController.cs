@@ -1,29 +1,37 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Demo.Jwt.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    [Route("[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        [Route("api/nopermission")]
+        [Route("nopermission")]
         public IActionResult NoPermission()
         {
             return Forbid("No Permission!");
         } 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/GetAuth")]
-        [Authorize("Permission")]
+        [Route("GetAuth")]
+        //[Authorize("Permission")]
         public async Task<IActionResult> GetAuth()
         {
             //这是获取自定义参数的方法

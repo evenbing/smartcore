@@ -12,11 +12,11 @@ namespace SmartCore.Models
         /// <summary>
         /// 是否成功
         /// </summary>
-        public bool Success
+        public bool success
         {
             get
             {
-                if (!string.IsNullOrEmpty(Code) && Code.Equals("200"))
+                if (this.code==200)
                 {
                     return true;
                 }
@@ -24,18 +24,27 @@ namespace SmartCore.Models
             }
         }
         /// <summary>
+        /// 当前时间戳
+        /// </summary>
+        public long timestamp
+        {
+            get
+            {
+                return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(); 
+            }
+        }
+        /// <summary>
         /// 返回的代码 200标识成功，其他请参见错误代码 （枚举类ErrorCodes）
         /// </summary>
-        public string Code { get; set; }
+        public int code { get; set; }
         /// <summary>
         /// 返回的中文信息
         /// </summary>
-        public string Message { get; set; } 
+        public string message { get; set; } 
         /// <summary>
         /// 返回的结果
         /// </summary> 
-        public object Data { get; set; }
-
+        public object data { get; set; }
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -50,11 +59,11 @@ namespace SmartCore.Models
         /// <param name="message"></param>
         /// <param name="title"></param>
         /// <param name="result"></param>
-        public ApiResultModels(string code, object result = null, string message = "调用接口成功")
+        public ApiResultModels(int code, object result = null, string message = "调用接口成功")
         {
-            Code = code;
-            Message = message;
-            Data = result;
+            this.code = code;
+            this.message = message;
+            this.data = result;
         }
     }
 }

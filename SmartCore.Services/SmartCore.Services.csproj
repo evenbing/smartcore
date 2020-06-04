@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ServiceManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="obj\Debug\project.assets.json" />
     <Content Include="obj\project.assets.json" />
   </ItemGroup>

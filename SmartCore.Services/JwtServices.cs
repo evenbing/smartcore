@@ -93,7 +93,7 @@ namespace SmartCore.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             //签发一个加密后的用户信息凭证，用来标识用户的身份 
-            var defaultScheme =  JwtBearerDefaults.AuthenticationScheme;
+            //var defaultScheme =  JwtBearerDefaults.AuthenticationScheme;
             //await _httpContextAccessor.HttpContext.SignInAsync(defaultScheme, new ClaimsPrincipal(claimsIdentity));
             string refreshToken = Guid.NewGuid().ToString("N");
             var result= new JwtAuthorizationDTO

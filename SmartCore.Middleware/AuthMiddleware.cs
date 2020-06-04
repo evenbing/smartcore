@@ -92,8 +92,8 @@ namespace SmartCore.Middleware
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         //自定义自己想要返回的数据结果，我这里要返回的是Json对象，通过引用Newtonsoft.Json库进行转换
                         var result = new ApiResultModels();
-                        result.Code = context.Response.StatusCode.ToString();
-                        result.Message = "很抱歉，您无权访问该接口!";
+                        result.code = context.Response.StatusCode;
+                        result.message = "很抱歉，您无权访问该接口!";
                         //context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         //输出Json数据结果
                         context.Response.WriteAsync(JsonConvert.SerializeObject(result));
