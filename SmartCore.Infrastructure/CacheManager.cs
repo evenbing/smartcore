@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmartCore.Infrastructure.Redis
+﻿using SmartCore.Infrastructure.Redis;
+using System; 
+/// <summary>
+/// 
+/// </summary>
+namespace SmartCore.Infrastructure
 {
     /// <summary>
     /// 缓存管理实现类 单例模式

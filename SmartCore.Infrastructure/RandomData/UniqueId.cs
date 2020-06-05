@@ -7,7 +7,7 @@ namespace SmartCore.Infrastructure.RandomData
 {
     public static class UniqueId
     {
-        private static long _sequence = DateTime.UtcNow.Ticks;
+        private static long _sequence = DateTime.Now.Ticks;
         public static long Generate()
         {
             return Interlocked.Increment(ref _sequence);
@@ -24,7 +24,7 @@ namespace SmartCore.Infrastructure.RandomData
         // Seed the _lastConnectionId for this application instance with
         // the number of 100-nanosecond intervals that have elapsed since 12:00:00 midnight, January 1, 0001
         // for a roughly increasing _lastId over restarts
-        private static long _lastId = DateTime.UtcNow.Ticks;
+        private static long _lastId = DateTime.Now.Ticks;
 
         //public static string GetNextId() => GenerateId(Interlocked.Increment(ref _lastId));
 

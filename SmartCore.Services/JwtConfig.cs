@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartCore.Services
 {
-    public class TokenManagement
+    public class JwtConfig
     {
         //[JsonProperty("secret")]
         /// <summary>

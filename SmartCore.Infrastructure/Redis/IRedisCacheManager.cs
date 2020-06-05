@@ -128,7 +128,23 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="expiresAt"></param>
         /// <returns></returns>
         Task<bool> Set<T>(string key, T value, DateTime? expiresAt = null);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        Task<bool> Set(string key, string value, long expiredTimeStamp);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        Task<bool> Set<T>(string key, T value, long expiredTimeStamp);
         /// <summary>
         /// 设置redis值  如果存在，那么则附加到原来的列表中
         /// </summary>

@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using SmartCore.Infrastructure.IOC;
+using Microsoft.Extensions.DependencyInjection;
+using SmartCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,15 +13,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace SmartCore.Infrastructure
+namespace SmartCore.Services
 {
-    public static class WebHelper
+    public abstract class BaseServices
     {
-        internal static readonly ContainerBuilder builder = new ContainerBuilder();
-        static WebHelper()
+        /// <summary>
+        /// cotr
+        /// </summary>
+        protected BaseServices()
         {
-            //HttpContextAccessor = HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
-            HttpContextAccessor = AutofacIoc.RegisterType<IHttpContextAccessor, HttpContextAccessor>();
+            HttpContextAccessor = ServiceProviderInstance.Instance.GetRequiredService<IHttpContextAccessor>();
+            Environment = ServiceProviderInstance.Instance.GetRequiredService<IWebHostEnvironment>();
         }
         #region 属性
 
@@ -55,17 +57,39 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 获取访问令牌
         /// </summary>
-        public static string AccessToken
+        public string AccessToken
         {
             get
             {
                 var authorization = Request?.Headers["Authorization"].SafeString();
                 if (string.IsNullOrWhiteSpace(authorization))
+                {
                     return "";
-                var list = authorization.Split(' ');
-                if (list.Length == 2)
-                    return list[1];
+                }
+                else
+                {
+                    var list = authorization.Split(' ');
+                    if (list.Length == 2)
+                    {
+                        return list[1];
+                    }
+                } 
                 return "";
+            }
+        }
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public string DeviceType
+        {
+            get
+            {
+                var deviceType = Request?.Headers["DeviceType"].SafeString();
+                if (string.IsNullOrWhiteSpace(deviceType))
+                {
+                    return "pc";
+                }
+                return deviceType;
             }
         }
         #endregion
@@ -75,13 +99,13 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// Ip地址
         /// </summary>
-        private static string _ip;
+        private string _ip;
 
         /// <summary>
         /// 设置Ip地址
         /// </summary>
         /// <param name="ip">Ip地址</param>
-        public static void SetIp(string ip)
+        public void SetIp(string ip)
         {
             _ip = ip;
         }
@@ -89,7 +113,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 重置Ip地址
         /// </summary>
-        public static void ResetIp()
+        public void ResetIp()
         {
             _ip = null;
         }
@@ -97,7 +121,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 客户端Ip地址
         /// </summary>
-        public static string Ip
+        public string Ip
         {
             get
             {
@@ -108,7 +132,7 @@ namespace SmartCore.Infrastructure
                 if (string.IsNullOrWhiteSpace(_ip) || list.Contains(_ip))
                 {
                     _ip = HttpContext?.Connection?.RemoteIpAddress.SafeString();
-                } 
+                }
                 if (string.IsNullOrWhiteSpace(_ip) || list.Contains(_ip))
                 {
                     _ip = Common.IsWindows ? GetLanIp() : GetLanIp(NetworkInterfaceType.Ethernet);
@@ -120,12 +144,12 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 获取局域网IP
         /// </summary>
-        private static string GetLanIp()
+        private string GetLanIp()
         {
             foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
             {
                 if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
-                    return hostAddress.ToString();
+                    return hostAddress?.ToString();
             }
             return string.Empty;
         }
@@ -167,12 +191,12 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 主机
         /// </summary>
-        public static string Host => HttpContext == null ? Dns.GetHostName() : GetClientHostName();
+        public string Host => HttpContext == null ? Dns.GetHostName() : GetClientHostName();
 
         /// <summary>
         /// 获取Web客户端主机名
         /// </summary>
-        private static string GetClientHostName()
+        private string GetClientHostName()
         {
             var address = GetRemoteAddress();
             if (string.IsNullOrWhiteSpace(address))
@@ -186,7 +210,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 获取远程地址
         /// </summary>
-        private static string GetRemoteAddress()
+        private string GetRemoteAddress()
         {
             return Request?.Headers["HTTP_X_FORWARDED_FOR"] ?? Request?.Headers["REMOTE_ADDR"];
         }
@@ -198,7 +222,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 同步获取请求正文
         /// </summary>
-        public static string Body
+        public string Body
         {
             get
             {
@@ -212,7 +236,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 获取请求正文
         /// </summary>
-        public static async Task<string> GetBodyAsync()
+        public async Task<string> GetBodyAsync()
         {
             Request.EnableBuffering();
             return await FileUtil.ToStringAsync(Request.Body, isCloseStream: false);
@@ -226,7 +250,7 @@ namespace SmartCore.Infrastructure
         /// <summary>
         /// 浏览器
         /// </summary>
-        public static string Browser => Request?.Headers["User-Agent"];
+        public string Browser => Request?.Headers["User-Agent"];
 
         #endregion
 
@@ -237,11 +261,11 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="url">url</param>
         /// <param name="isUpper">编码字符是否转成大写,范例,"http://"转成"http%3A%2F%2F"</param>
-        public static string UrlEncode(string url, bool isUpper = false)
+        public string UrlEncode(string url, bool isUpper = false)
         {
             return UrlEncode(url, Encoding.UTF8, isUpper);
         }
-        public static string WebUtilityEncode(string url)
+        public string WebUtilityEncode(string url)
         {
             return WebUtility.UrlEncode(url);
         }
@@ -251,7 +275,7 @@ namespace SmartCore.Infrastructure
         /// <param name="url">url</param>
         /// <param name="encoding">字符编码</param>
         /// <param name="isUpper">编码字符是否转成大写,范例,"http://"转成"http%3A%2F%2F"</param>
-        public static string UrlEncode(string url, string encoding, bool isUpper = false)
+        public string UrlEncode(string url, string encoding, bool isUpper = false)
         {
             encoding = string.IsNullOrWhiteSpace(encoding) ? "UTF-8" : encoding;
             return UrlEncode(url, Encoding.GetEncoding(encoding), isUpper);
@@ -263,7 +287,7 @@ namespace SmartCore.Infrastructure
         /// <param name="url">url</param>
         /// <param name="encoding">字符编码</param>
         /// <param name="isUpper">编码字符是否转成大写,范例,"http://"转成"http%3A%2F%2F"</param>
-        public static string UrlEncode(string url, Encoding encoding, bool isUpper = false)
+        public string UrlEncode(string url, Encoding encoding, bool isUpper = false)
         {
             var result = HttpUtility.UrlEncode(url, encoding);
             if (isUpper == false)
@@ -298,7 +322,7 @@ namespace SmartCore.Infrastructure
         /// Url解码
         /// </summary>
         /// <param name="url">url</param>
-        public static string UrlDecode(string url)
+        public string UrlDecode(string url)
         {
             return HttpUtility.UrlDecode(url);
         }
@@ -307,7 +331,7 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string WebUtilityDecode(string url)
+        public string WebUtilityDecode(string url)
         {
             return WebUtility.UrlDecode(url);
         }
@@ -316,7 +340,7 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="url">url</param>
         /// <param name="encoding">字符编码</param>
-        public static string UrlDecode(string url, Encoding encoding)
+        public string UrlDecode(string url, Encoding encoding)
         {
             return HttpUtility.UrlDecode(url, encoding);
         }
@@ -330,7 +354,7 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="filePath">文件绝对路径</param>
         /// <param name="fileName">文件名,包含扩展名</param>
-        public static async Task DownloadFileAsync(string filePath, string fileName)
+        public async Task DownloadFileAsync(string filePath, string fileName)
         {
             await DownloadFileAsync(filePath, fileName, Encoding.UTF8);
         }
@@ -341,7 +365,7 @@ namespace SmartCore.Infrastructure
         /// <param name="filePath">文件绝对路径</param>
         /// <param name="fileName">文件名,包含扩展名</param>
         /// <param name="encoding">字符编码</param>
-        public static async Task DownloadFileAsync(string filePath, string fileName, Encoding encoding)
+        public async Task DownloadFileAsync(string filePath, string fileName, Encoding encoding)
         {
             var bytes = FileUtil.Read(filePath);
             await DownloadAsync(bytes, fileName, encoding);
@@ -352,7 +376,7 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="stream">流</param>
         /// <param name="fileName">文件名,包含扩展名</param>
-        public static async Task DownloadAsync(Stream stream, string fileName)
+        public async Task DownloadAsync(Stream stream, string fileName)
         {
             await DownloadAsync(stream, fileName, Encoding.UTF8);
         }
@@ -363,7 +387,7 @@ namespace SmartCore.Infrastructure
         /// <param name="stream">流</param>
         /// <param name="fileName">文件名,包含扩展名</param>
         /// <param name="encoding">字符编码</param>
-        public static async Task DownloadAsync(Stream stream, string fileName, Encoding encoding)
+        public async Task DownloadAsync(Stream stream, string fileName, Encoding encoding)
         {
             await DownloadAsync(FileUtil.ToBytes(stream), fileName, encoding);
         }
@@ -373,7 +397,7 @@ namespace SmartCore.Infrastructure
         /// </summary>
         /// <param name="bytes">字节流</param>
         /// <param name="fileName">文件名,包含扩展名</param>
-        public static async Task DownloadAsync(byte[] bytes, string fileName)
+        public async Task DownloadAsync(byte[] bytes, string fileName)
         {
             await DownloadAsync(bytes, fileName, Encoding.UTF8);
         }
@@ -384,7 +408,7 @@ namespace SmartCore.Infrastructure
         /// <param name="bytes">字节流</param>
         /// <param name="fileName">文件名,包含扩展名</param>
         /// <param name="encoding">字符编码</param>
-        public static async Task DownloadAsync(byte[] bytes, string fileName, Encoding encoding)
+        public async Task DownloadAsync(byte[] bytes, string fileName, Encoding encoding)
         {
             if (bytes == null || bytes.Length == 0)
                 return;
@@ -397,10 +421,5 @@ namespace SmartCore.Infrastructure
         }
 
         #endregion
-    }
-
-    public class ServiceProviderInstance
-    {
-        public static IServiceProvider Instance { get; set; }
     }
 }

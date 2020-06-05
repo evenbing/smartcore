@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text;
 namespace SmartCore.Middleware
 {
 
-    public class CustomExceptionResultModel : BaseResultModel
+    public class CustomExceptionResultModel : ApiResultModels
     {
         /// <summary>
         /// 异常处理 

@@ -24,7 +24,6 @@ namespace SmartCore.Middleware
         /// <param name="context"></param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
-            string traceIdentifier = context.HttpContext?.TraceIdentifier;
             if (context.Result is ValidationFailedResult)
             {
                 var objectResult = context.Result as ObjectResult;
@@ -38,7 +37,7 @@ namespace SmartCore.Middleware
                     var objectResult = context.Result as ObjectResult;
                     if (objectResult.Value == null)
                     {
-                        context.Result = new OkObjectResult(new ApiResultModels { code = 404, message = "未找到资源" });
+                        context.Result = new OkObjectResult(new ApiResultModels { code = 600, message = "未找到资源" });
                     }
                     else
                     {
@@ -51,7 +50,7 @@ namespace SmartCore.Middleware
                 }
                 else if (context.Result is ContentResult)
                 {
-                    context.Result = new OkObjectResult(new ApiResultModels { code = 200, message = "调用接口成功", data = (context.Result as ContentResult)?.Content});
+                    context.Result = new OkObjectResult(new ApiResultModels { code = 200, message = "操作成功", data = (context.Result as ContentResult)?.Content});
                 }
                 else if (context.Result is StatusCodeResult)
                 {

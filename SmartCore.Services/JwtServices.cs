@@ -12,35 +12,32 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
+using SmartCore.Infrastructure;
+using System.Linq;
 
 namespace SmartCore.Services
 {
     /// <summary>
     /// 
     /// </summary>
-    public interface IJwtServices 
+    public interface IJwtServices
     {
-         Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO);
+        #region 生成token
+        Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO);
+        #endregion
+        #region 校验token的有效性
+
+        Task<ClaimsPrincipal> ValidateToken(string token);
+        #endregion
     }
-    public class JwtServices: IJwtServices
+    public class JwtServices : BaseServices, IJwtServices
     {
-       
+
         private string _base64Secret;
-        private TokenManagement tokenSetting = new TokenManagement();
-        //public List<JwtAuthorizationDTO> _tokens = new List<JwtAuthorizationDTO>();
-        //public JwtServices()
-        //{
-        //    tokenSetting = ConfigUtil.GetAppSettings<TokenManagement>("JwtConfig");
-        //    //GetSecret();
-        //}
-        /// <summary>
-        /// 获取 HTTP 请求上下文  必须在startup注册服务 services.AddHttpContextAccessor();
-        /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public JwtServices(IHttpContextAccessor httpContextAccessor)
+        private JwtConfig tokenSetting = new JwtConfig();
+        public JwtServices()
         {
-            tokenSetting = ConfigUtil.GetAppSettings<TokenManagement>("JwtConfig");
-            _httpContextAccessor = httpContextAccessor;
+            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
         }
         /// <summary>
         /// 获取到加密串
@@ -63,32 +60,37 @@ namespace SmartCore.Services
         /// <returns></returns>
         public async Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO)
         {
-            //每次登陆动态刷新
-            Const.ValidAudience = userTokenDTO.Id + userTokenDTO.UserPass + DateTime.Now.ToString();
-            DateTime nowTime = DateTime.UtcNow;
+            string userConfoundId = DigitsUtil.ConvertTo62RadixString(userTokenDTO.Id);
+            string deviceType = DeviceType;
+            DateTime nowTime = DateTime.Now;
             long currentTimeStamp = new DateTimeOffset(nowTime).ToUnixTimeSeconds();
             long expiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.AccessExpiration)).ToUnixTimeSeconds();
             long refreshExpiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.RefreshExpiration)).ToUnixTimeSeconds();
-            var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
+            DateTime expiresTime = nowTime.AddMinutes(tokenSetting.AccessExpiration).AddSeconds(30);//过期时间+30m
+            var secretKey = Encoding.UTF8.GetBytes(tokenSetting.Secret);
+            string jti = Guid.NewGuid().ToString("N");
+            //每次登陆动态刷新
+            string redisValue = string.Concat(userConfoundId, "|", currentTimeStamp, "|", expiredTimeStamp,"|",Guid.NewGuid().ToString("N"));
             //将用户信息添加到 Claim 中
             var claimsIdentity = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                    new Claim(JwtRegisteredClaimNames.Jti,jti),
                     new Claim(JwtRegisteredClaimNames.Iat, $"{currentTimeStamp}"),
                     new Claim(JwtRegisteredClaimNames.Nbf,$"{currentTimeStamp}"),
-                      new Claim(JwtRegisteredClaimNames.Exp,$"{expiredTimeStamp}")  ,
-                    new Claim(ClaimTypes.Email, userTokenDTO.Email),
+                    new Claim(JwtRegisteredClaimNames.Exp,$"{expiredTimeStamp}")  ,
+                    new Claim(ClaimTypes.Email, userTokenDTO.Email??""),
                     new Claim(ClaimTypes.Role,userTokenDTO.UserRole??""),
-                    new Claim(ClaimTypes.NameIdentifier,userTokenDTO.Id.ToString()+"999999999999"),//这里存的是aes加密后的用户主键id
-                     new Claim(ClaimTypes.Expiration,expiredTimeStamp.ToString())
+                    new Claim(ClaimTypes.NameIdentifier,userConfoundId),//这里存的是aes加密后的用户主键id
+                    new Claim(ClaimTypes.Expiration,expiredTimeStamp.ToString()),
+                    new Claim(ClaimTypes.Name, deviceType),
                 });
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = tokenSetting.Issuer,
-                Audience = Const.ValidAudience,
+                Audience = redisValue,
                 Subject = claimsIdentity,
-                Expires = nowTime.AddMinutes(tokenSetting.AccessExpiration),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = expiresTime,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -96,43 +98,70 @@ namespace SmartCore.Services
             //var defaultScheme =  JwtBearerDefaults.AuthenticationScheme;
             //await _httpContextAccessor.HttpContext.SignInAsync(defaultScheme, new ClaimsPrincipal(claimsIdentity));
             string refreshToken = Guid.NewGuid().ToString("N");
-            var result= new JwtAuthorizationDTO
+            var result = new JwtAuthorizationDTO
             {
-                id = userTokenDTO.Id.ToString(),
+                id = userConfoundId,
                 token_type = "Bearer",
-                access_token = new AccessToken { token = tokenHandler.WriteToken(token),expired= expiredTimeStamp, expires_in= tokenSetting.AccessExpiration },
+                access_token = new AccessToken { token = tokenHandler.WriteToken(token), expired = expiredTimeStamp, expires_in = tokenSetting.AccessExpiration },
                 refresh_token = new AccessToken { token = refreshToken, expired = refreshExpiredTimeStamp, expires_in = tokenSetting.RefreshExpiration }
             };
-            return await Task.FromResult(result);
+            await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
+            await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
+            return result;
         }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="claims"></param>
-        ///// <param name="tokenManagement"></param>
-        ///// <returns></returns>
-        //public dynamic BuildJwtToken(Claim[] claims, TokenManagement tokenManagement)
-        //{
-        //    var key = Encoding.UTF8.GetBytes(tokenManagement.Secret);
-        //    var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
-        //    var now = DateTime.UtcNow;
-        //    var jwt = new JwtSecurityToken(
-        //        issuer: tokenManagement.Issuer,
-        //        audience: tokenManagement.Audience,
-        //        claims: claims,
-        //        notBefore: now,
-        //        expires: now.Add(TimeSpan.FromMinutes(tokenManagement.AccessExpiration)),
-        //        signingCredentials: signingCredentials
-        //    );
-        //    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-        //    var response = new
-        //    {
-        //        access_token = encodedJwt,
-        //        expires_in = tokenManagement.AccessExpiration,
-        //        token_type = "Bearer"
-        //    };
-        //    return response;
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<ClaimsPrincipal> ValidateToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var securityKey = Encoding.UTF8.GetBytes(tokenSetting.Secret);
+                var result = handler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateActor = true,
+                    ValidateLifetime = true, // Validate the token expiry 是否验证失效时间
+                    ValidateIssuerSigningKey = true,////是否验证SecurityKey
+                    //获取或设置需要使用的microsoft.identitymodel.tokens.securitykey用于签名验证
+                    IssuerSigningKey = new SymmetricSecurityKey(securityKey),
+                    ValidateIssuer = true,//是否验证Issuer
+                    ValidIssuer = tokenSetting.Issuer,
+                    ValidateAudience = true,//是否验证Audience
+                    //这里采用动态验证的方式，在退出、修改密码、重新登陆等动作时，刷新token，旧token就强制失效了 也可以用常量的形式，ValidAudience = tokenSetting.Audience,
+                    AudienceValidator = (m, n, z) =>
+                    {
+                        if (n != null)
+                        {
+                            var jwtSecurityToken = n as JwtSecurityToken;
+                            string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
+                            string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
+                            int userKeyId = DigitsUtil.RadixString(userId);
+                            if (userKeyId > 0)
+                            {
+                                string redisKey = $"user:{deviceType}:token:{userKeyId}";
+                                string audience = CacheManager.Instance.Get(redisKey).Result;
+                                if (!string.IsNullOrEmpty(audience))
+                                {
+                                    return m != null && m.FirstOrDefault().Equals(audience);
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    //If you want to allow a certain amount of clock drift, set that here:注意这是缓冲过期时间，总的有效时间等于这个时间加上jwt的过期时间，如果不配置，默认是5分钟  ClockSkew = TimeSpan.FromSeconds(30)
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    RequireExpirationTime = true
+                }, out SecurityToken validatedToken);
+                return await Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         ///// <summary>
         ///// 
         ///// </summary>
@@ -256,7 +285,7 @@ namespace SmartCore.Services
         //            ClockSkew = TimeSpan.FromSeconds(30),
         //            RequireExpirationTime = true
         //        }, out SecurityToken validatedToken);
-               
+
         //    }
         //    catch (Exception ex)
         //    {

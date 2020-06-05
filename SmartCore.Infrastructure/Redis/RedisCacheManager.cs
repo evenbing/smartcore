@@ -19,7 +19,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 配置redis host
         /// </summary>
-        public static readonly RedisConfigs configInfo = new RedisConfigs();
+        public static readonly RedisConfig configInfo =Config.ConfigUtil.GetAppSettings<RedisConfig>("RedisConfig");
         /// <summary>
         /// 私有变量 ConnectionMultiplexer
         /// </summary>
@@ -444,8 +444,8 @@ namespace SmartCore.Infrastructure.Redis
         /// <returns></returns>
         public async Task<string> Get(string key)
         {
-            var str = await Get<string>(key);
-            if (!string.IsNullOrEmpty(str) && str.StartsWith("\"") && str.EndsWith("\""))
+            var str = await Do(db => db.StringGetAsync(key));
+            if (!string.IsNullOrEmpty(str) && str.StartsWith("\""))
             {
                 str = System.Text.RegularExpressions.Regex.Unescape(str);
             }
@@ -479,7 +479,34 @@ namespace SmartCore.Infrastructure.Redis
         /// <returns></returns>
         public async Task<bool> Set(string key, string value, DateTime? expiresAt = null)
         {
-            return await Set<string>(key, value, expiresAt);
+            if (expiresAt.HasValue)
+            {
+                return await Do(db => db.StringSetAsync(key, value, expiresAt - DateTime.Now));
+            }
+            else 
+            {
+                return await Do(db => db.StringSetAsync(key, value));
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        public async Task<bool> Set(string key, string value,long expiredTimeStamp)
+        {
+            if (expiredTimeStamp>0)
+            {
+                long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                long timeSpanTimestamp = expiredTimeStamp - currentTimestamp;
+                return await Do(db => db.StringSetAsync(key, value,TimeSpan.FromSeconds(timeSpanTimestamp)));
+            }
+            else
+            {
+                return await Do(db => db.StringSetAsync(key, value));
+            }
         }
         /// <summary>
         /// 设置redis值 
@@ -501,7 +528,28 @@ namespace SmartCore.Infrastructure.Redis
                 return await Do(db => db.StringSetAsync(key, json));
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        public async Task<bool> Set<T>(string key, T value, long expiredTimeStamp)
+        {
+            string json = ConvertJson(value);
+            if (expiredTimeStamp>0)
+            {
+                long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                long timeSpanTimestamp = expiredTimeStamp - currentTimestamp;
+                return await Do(db => db.StringSetAsync(key, json, TimeSpan.FromSeconds(timeSpanTimestamp)));
+            }
+            else
+            {
+                return await Do(db => db.StringSetAsync(key, json));
+            }
+        }
         /// <summary>
         /// 设置redis值  如果存在，那么则附加到原来的列表中
         /// </summary>

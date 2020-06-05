@@ -30,7 +30,7 @@ namespace SmartCore.Models
         {
             get
             {
-                return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(); 
+                return new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds(); 
             }
         }
         /// <summary>

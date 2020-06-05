@@ -30,7 +30,7 @@ namespace SmartCore.Infrastructure
             StringBuilder sBuilder = new StringBuilder();
             while (true)
             {
-                int remainder = (int)(seq % EXPONENT);
+                int remainder =seq % EXPONENT;
                 sBuilder.Append(DIGITS[remainder]);
                 seq = seq / EXPONENT;
                 if (seq == 0)

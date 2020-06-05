@@ -232,7 +232,7 @@ namespace SmartCore.Infrastructure.RandomData
         /// <returns>An ObjectId.</returns>
         public static ObjectId GenerateNewId()
         {
-            return GenerateNewId(GetTimestampFromDateTime(DateTime.UtcNow));
+            return GenerateNewId(GetTimestampFromDateTime(DateTime.Now));
         }
 
         /// <summary>

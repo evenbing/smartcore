@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using SmartCore.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using SmartCore.Infrastructure;
 
 namespace SmartCore.Middleware
 {
@@ -20,7 +21,7 @@ namespace SmartCore.Middleware
     {
         public static IServiceCollection AddTokenAuthentication(this IServiceCollection services, IConfiguration config)
         { 
-            var tokenSetting = config.GetSection("JwtConfig").Get<TokenManagement>();
+            var tokenSetting = config.GetSection("JwtConfig").Get<JwtConfig>();
             var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
             //添加基于策略授权的方法
             //验证授权模式是否为jwt bearer
@@ -56,11 +57,19 @@ namespace SmartCore.Middleware
                         {
                             var jwtSecurityToken = n as JwtSecurityToken;
                             string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
-                            //通过userid解密出来，然后找到对应的redis就是Const.ValidAudience对应的值
-                            return m != null && m.FirstOrDefault().Equals(Const.ValidAudience);
+                            string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
+                            int userKeyId = DigitsUtil.RadixString(userId);
+                            if (userKeyId>0)
+                            {
+                                string redisKey = $"user:{deviceType}:token:{userKeyId}";
+                                string audience = CacheManager.Instance.Get(redisKey).Result;
+                                if (!string.IsNullOrEmpty(audience))
+                                { 
+                                    return m != null && m.FirstOrDefault().Equals(audience);
+                                }
+                            } 
                         }
-                        return false;
-                       // return m != null && m.FirstOrDefault().Equals(Const.ValidAudience);
+                        return false; 
                     }, 
                     //If you want to allow a certain amount of clock drift, set that here:注意这是缓冲过期时间，总的有效时间等于这个时间加上jwt的过期时间，如果不配置，默认是5分钟  ClockSkew = TimeSpan.FromSeconds(30)
                     ClockSkew = TimeSpan.FromSeconds(30),

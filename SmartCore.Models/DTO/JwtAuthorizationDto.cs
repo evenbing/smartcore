@@ -26,6 +26,9 @@ namespace SmartCore.Models.DTO
         /// </summary>
         public AccessToken refresh_token { get; set; }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class AccessToken 
     {
         /// <summary>

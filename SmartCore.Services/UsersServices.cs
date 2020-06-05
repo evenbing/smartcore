@@ -1,66 +1,105 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SmartCore.Models.DTO;
+using SmartCore.Repository.User;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text; 
+using System.Text;
+using System.Threading.Tasks;
+
 namespace SmartCore.Services
 {
-    public class User
+    public class UserLoginDTO
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        //[Required(ErrorMessage = "用户名称不能为空")]
+        
         public string Username { get; set; }
-         //[JsonIngore]
-        public string Password { get; set; }
-
-        public string Token { get; set; }
+        //[JsonIngore]
+        public string Password { get; set; } 
     }
+    public class UserDTO
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string UserName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Password { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string RealName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Salt { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Avatar { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Birthday { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Sex { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Email { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Phone { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string OrgCode { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Status { get; set; }
+    }
+    
     public interface IUserService
     {
-        User Authenticate(string username, string password);
-        IEnumerable<User> GetAll();
+        Task<JwtAuthorizationDTO> SignIn(UserLoginDTO userLoginDTO);
+        //IEnumerable<UserVO> GetAll();
     }
-    public class UsersServicesImp: IUserService
+    public class UsersServices:BaseServices, IUserService
     {
-        private List<User> _users = new List<User>
+        /// <summary>
+        /// Jwt 服务
+        /// </summary>
+        private readonly IJwtServices _jwtServices;
+        private readonly IUserRepository _userRepository;
+        public UsersServices(IJwtServices jwtServices, IUserRepository userRepository)
         {
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-        };
-
-       // private readonly AppSettings _appSettings;
-
-        public User Authenticate(string username, string password)
-        {
-            var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
-
-            // return null if user not found
-            if (user == null)
-                return null;
-
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("");//todo 赋值secret
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
-
-            return user;
+            _jwtServices = jwtServices;
+            _userRepository = userRepository;
         }
-        public IEnumerable<User> GetAll()
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        /// <param name="userLoginDTO"></param>
+        /// <returns></returns>
+        public async Task<JwtAuthorizationDTO> SignIn(UserLoginDTO userLoginDTO)
         {
-            return _users;
-        }
+            //判断用户的账号是否在数据表中存在
+             if(_userRepository.CheckUser)
+            UserTokenDTO userTokenDTO = new UserTokenDTO();
+            userTokenDTO.Id = 0;
+           var result= await _jwtServices.GenerateSecurityToken(userTokenDTO);
+            return result;
+        } 
     }
 }

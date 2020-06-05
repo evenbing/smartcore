@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         public IActionResult GetControllers()
         {
             //var id=WebHelper.HttpContext?.TraceIdentifier;
-           string ip= WebHelper.Ip;
+           //string ip= WebHelper.Ip;
            // IMediator mediator
             ConcurrentBag<Dictionary<string,List<string>>> list = new ConcurrentBag<Dictionary<string, List<string>>>();
             IEnumerable<System.Type> assembly = null;
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
                 list.Add(keyValuePair);
                 }
             //});
-            var result= new { list = list, ip = ip };
+            var result= new { list = list, ip = "" };
             return Ok(result);
         }
     }

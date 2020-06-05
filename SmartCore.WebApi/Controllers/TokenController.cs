@@ -42,6 +42,7 @@ namespace WebApi.Controllers
         { 
             UserTokenDTO userTokenDTO = new UserTokenDTO();
             userTokenDTO.Email = "wenbin.ye@winbean.com";
+            userTokenDTO.Id = 1888999999;
             var token =await _jwtServices.GenerateSecurityToken(userTokenDTO);
             return Ok(token);
         }

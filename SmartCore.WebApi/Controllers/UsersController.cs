@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-//using WebApi.Services;
-//using WebApi.Models;
-using System.Linq;
-using System.Net.Http;
 using SmartCore.Services;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using SmartCore.Infrastructure;
-
+/// <summary>
+/// 
+/// </summary>
 namespace SmartCore.WebApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("[controller]")]
@@ -25,14 +22,14 @@ namespace SmartCore.WebApi
         /// <summary>
         /// 
         /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserService _userService;
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="httpContextAccessor"></param>
-        public UsersController(IHttpContextAccessor httpContextAccessor)
+        /// <param name="userService"></param>
+        public UsersController(IUserService userService)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
         }
     // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
         /// <summary>
@@ -43,16 +40,17 @@ namespace SmartCore.WebApi
         [Route("GetUsersList")]
         public async Task<IActionResult> GetUsersList()
         {
-            var id = WebHelper.HttpContext?.TraceIdentifier;
-            var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync();//获取登录用户的AuthenticateResult
-            if (auth.Succeeded)
-            {
-                bool IsAuthenticated = HttpContext.User.Identity.IsAuthenticated;
-                
-                   var userCli = auth.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                return Ok(userCli.Value);
-            }
-                return Ok(null);
+          var await _userService.SignIn(new UserLoginDTO());
+           // var id = _userService;// WebHelper.HttpContext?.TraceIdentifier;
+           //// var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync();//获取登录用户的AuthenticateResult
+           // if (auth.Succeeded)
+           // {
+           //     bool IsAuthenticated = HttpContext.User.Identity.IsAuthenticated;
+
+            //        var userCli = auth.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            //     return Ok(userCli.Value);
+            // }
+            return Ok(null);
         }
         //[HttpPost]
         //[Route("SaveUserInfo")]

@@ -14,6 +14,8 @@ using SmartCore.Middleware;
 using SmartCore.Middleware.MiddlewareExtension;
 using SmartCore.Repository.Base;
 using SmartCore.Repository.Base.Impl;
+using SmartCore.Services;
+
 namespace SmartCore.WebApi
 {
     /// <summary>
@@ -117,6 +119,10 @@ namespace SmartCore.WebApi
                 return next();
             });
             //app.UseHttpsRedirection(); 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -138,10 +144,13 @@ namespace SmartCore.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseErrorHandling();
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            ServiceProviderInstance.Instance = app.ApplicationServices;
+
         }
         /// <summary>
         /// IOC…Ë÷√

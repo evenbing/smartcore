@@ -64,10 +64,6 @@ namespace SmartCore.Infrastructure.IOC
         {
             //var result=  builder.RegisterType<T>();
             //  return result.AsImplementedInterfaces<T>();
-            //using (var container = builder.Build())
-            //{
-            //    return container.Resolve<T>();//.PropertiesAutowired();//.PropertiesAutowired();
-            //}
             using (var container = builder.Build())
             {
                 //using (var scope = container.BeginLifetimeScope())

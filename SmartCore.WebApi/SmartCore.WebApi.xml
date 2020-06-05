@@ -72,16 +72,21 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="F:SmartCore.WebApi.UsersController._httpContextAccessor">
+        <member name="T:SmartCore.WebApi.UsersController">
             <summary>
             
             </summary>
         </member>
-        <member name="M:SmartCore.WebApi.UsersController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="F:SmartCore.WebApi.UsersController._userService">
             <summary>
             
             </summary>
-            <param name="httpContextAccessor"></param>
+        </member>
+        <member name="M:SmartCore.WebApi.UsersController.#ctor(SmartCore.Services.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
         </member>
         <member name="M:SmartCore.WebApi.UsersController.GetUsersList">
             <summary>
