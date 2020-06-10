@@ -11,7 +11,7 @@ namespace SmartCore.WebApi.Controllers.System
     /// <summary>
     /// 
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     [ApiController]
     public class BaseDataManmentController:BaseApiController

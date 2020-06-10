@@ -60,7 +60,7 @@ namespace SmartCore.WebApi
             });
 
             #region Authentication
-            services.AddTokenAuthentication(Configuration);
+            services.AddTokenAuthentication();
             #endregion
             //#region HttpClientFactory
             services.AddHttpClient();
@@ -119,10 +119,10 @@ namespace SmartCore.WebApi
                 return next();
             });
             //app.UseHttpsRedirection(); 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-            });
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            //});
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -137,7 +137,7 @@ namespace SmartCore.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                 });
             }
             app.UseRouting();

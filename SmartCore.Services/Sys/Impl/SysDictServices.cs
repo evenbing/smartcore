@@ -1,4 +1,5 @@
-﻿using SmartCore.Repository.Sys;
+﻿
+using SmartCore.Repository.Sys;
 using System;
 using System.Collections.Generic;
 using System.Text;

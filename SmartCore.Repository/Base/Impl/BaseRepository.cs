@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
 using System.Data;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using SmartCore.Repository.Sys.Impl;
+using System.Threading;
 
 namespace SmartCore.Repository.Base.Impl
 {
@@ -19,6 +22,7 @@ namespace SmartCore.Repository.Base.Impl
         /// 列名缓存
         /// </summary>
         private static readonly ConcurrentDictionary<string, string> ColumnsCache = new ConcurrentDictionary<string, string>();
+        private static ThreadLocal<DataSourceEnum> _dataSourceEnum = new ThreadLocal<DataSourceEnum>();
         #endregion
 
         #region 属性
@@ -61,6 +65,16 @@ namespace SmartCore.Repository.Base.Impl
             }
             set { _tableName = value; }
         }
+
+        ///// <summary>
+        ///// 当前线程数据源 
+        ///// </summary>
+        ///// <param name="sourceEnum"></param>     
+        //public  DataSourceEnum DataSource
+        //{
+        //    set { _dataSourceEnum.Value = value; }
+        //    get { return _dataSourceEnum.Value; }
+        //}
         #endregion
 
         #region 根据表名获取列名
@@ -504,6 +518,16 @@ namespace SmartCore.Repository.Base.Impl
         /// <returns></returns>
         public async Task<List<TEntity>> QueryAllList(IDbTransaction transaction = null, int? commandTimeout = null)
         {
+           // Type chindType = this.GetType();//获取子类的类型 
+           //var childAttr = chindType.GetCustomAttributes(typeof(DatatSourceSlaveAttribute), false).FirstOrDefault();
+           // if (childAttr != null)
+           // {
+           //     DataSource = DataSourceEnum.SLAVE;
+           // }
+           // else
+           // {
+           //     DataSource = DataSourceEnum.MASTER;
+           // }
             using (var dbConnection = ConnectionFactory.OpenConnection())
             {
                 var result = await dbConnection.GetAllAsync<TEntity>(transaction, commandTimeout);

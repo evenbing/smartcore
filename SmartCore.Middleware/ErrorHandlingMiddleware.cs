@@ -13,12 +13,23 @@ namespace SmartCore.Middleware
     /// </summary>
     public class ErrorHandlingMiddleware
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly RequestDelegate next;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="next"></param>
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
             try

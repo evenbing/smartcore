@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+//using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 
@@ -39,15 +43,7 @@ namespace SmartCore.Infrastructure.Orm
         {
             get { return dbConfig.DatabaseType; }
         }
-        /// <summary>
-        /// 当前线程数据源 
-        /// </summary>
-        /// <param name="sourceEnum"></param>     
-        public static DataSourceEnum DataSource
-        {
-            set { _dataSourceEnum.Value = value; }
-            get { return _dataSourceEnum.Value; }
-        }
+    
         #endregion
 
         #region 创建数据库连接
@@ -100,6 +96,22 @@ namespace SmartCore.Infrastructure.Orm
         {
             var dbType = GetDataBaseType(CurrentDatabaseType);
             return CreateConnection(dbType, ConnectionString);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataSourceEnum"></param>
+        /// <returns></returns>
+        public static IDbConnection OpenConnection(DataSourceEnum dataSourceEnum)
+        { 
+            if (dataSourceEnum == DataSourceEnum.MASTER)
+            {
+                return OpenConnection();
+            }
+            else
+            {
+                return OpenSlaveConnection();
+            }
         }
         #endregion
 

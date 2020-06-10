@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using SmartCore.Infrastructure;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace SmartCore.Services
 {
@@ -34,10 +35,13 @@ namespace SmartCore.Services
     {
 
         private string _base64Secret;
-        private JwtConfig tokenSetting = new JwtConfig();
-        public JwtServices()
+        private JwtConfig tokenSetting = new JwtConfig();//ILogger logger   _logger = logger;
+
+        private ILoggerFactory _logger;
+        public JwtServices(ILoggerFactory logger)
         {
-            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
+            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig"); 
+            _logger = logger;
         }
         /// <summary>
         /// 获取到加密串
@@ -60,9 +64,13 @@ namespace SmartCore.Services
         /// <returns></returns>
         public async Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO)
         {
+            if (tokenSetting.AccessExpiration == 0)
+            {
+                tokenSetting.AccessExpiration = 120;
+            }
             string userConfoundId = DigitsUtil.ConvertTo62RadixString(userTokenDTO.Id);
             string deviceType = DeviceType;
-            DateTime nowTime = DateTime.Now;
+            DateTime nowTime = DateTime.UtcNow;
             long currentTimeStamp = new DateTimeOffset(nowTime).ToUnixTimeSeconds();
             long expiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.AccessExpiration)).ToUnixTimeSeconds();
             long refreshExpiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.RefreshExpiration)).ToUnixTimeSeconds();
@@ -76,13 +84,13 @@ namespace SmartCore.Services
             var claimsIdentity = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Jti,jti),
-                    new Claim(JwtRegisteredClaimNames.Iat, $"{currentTimeStamp}"),
-                    new Claim(JwtRegisteredClaimNames.Nbf,$"{currentTimeStamp}"),
-                    new Claim(JwtRegisteredClaimNames.Exp,$"{expiredTimeStamp}")  ,
+                    new Claim(JwtRegisteredClaimNames.Iat, $"{currentTimeStamp}",ClaimValueTypes.Integer64),
+                    new Claim(JwtRegisteredClaimNames.Nbf,$"{currentTimeStamp}",ClaimValueTypes.Integer64),
+                    new Claim(JwtRegisteredClaimNames.Exp,$"{expiredTimeStamp}",ClaimValueTypes.Integer64)  ,
                     new Claim(ClaimTypes.Email, userTokenDTO.Email??""),
                     new Claim(ClaimTypes.Role,userTokenDTO.UserRole??""),
                     new Claim(ClaimTypes.NameIdentifier,userConfoundId),//这里存的是aes加密后的用户主键id
-                    new Claim(ClaimTypes.Expiration,expiredTimeStamp.ToString()),
+                    new Claim(ClaimTypes.Expiration,$"{expiredTimeStamp}",ClaimValueTypes.Integer64),
                     new Claim(ClaimTypes.Name, deviceType),
                 });
             var tokenDescriptor = new SecurityTokenDescriptor

@@ -14,14 +14,15 @@ using SmartCore.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using SmartCore.Infrastructure;
+using SmartCore.Infrastructure.Config;
 
 namespace SmartCore.Middleware
 {
     public static class AuthMiddlewareExtension
     {
-        public static IServiceCollection AddTokenAuthentication(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddTokenAuthentication(this IServiceCollection services)
         { 
-            var tokenSetting = config.GetSection("JwtConfig").Get<JwtConfig>();
+            var tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
             var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
             //添加基于策略授权的方法
             //验证授权模式是否为jwt bearer
