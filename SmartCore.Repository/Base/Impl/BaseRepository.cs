@@ -200,6 +200,28 @@ namespace SmartCore.Repository.Base.Impl
                 return result;
             }
         }
+        //public async Task<bool> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        //{
+        //    using (var dbConnection = ConnectionFactory.OpenConnection())
+        //    {
+        //        foreach (var property in properties)
+        //        {
+        //            string propertyName = "";
+        //            Expression bodyExpression = property.Body;
+        //            if (bodyExpression.NodeType == ExpressionType.Convert && bodyExpression is UnaryExpression)
+        //            {
+        //                Expression operand = ((UnaryExpression)property.Body).Operand;
+        //                propertyName = ((MemberExpression)operand).Member.Name;
+        //            }
+        //            else
+        //            {
+        //                propertyName = ExpressionHelper.GetExpressionText(property);
+        //            } 
+        //        }
+        //        var result = await dbConnection.UpdateAsync(entity);
+        //        return result;
+        //    }
+        //}
         /// <summary>
         /// 批量更新实体数据
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartCore.Services.Sys;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace SmartCore.WebApi.Controllers.System
     /// <summary>
     /// 
     /// </summary>
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class BaseDataManmentController:BaseApiController

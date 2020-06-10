@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using SmartCore.Infrastructure;
 using System;
@@ -24,6 +25,7 @@ namespace SmartCore.Services
         {
             HttpContextAccessor = ServiceProviderInstance.Instance.GetRequiredService<IHttpContextAccessor>();
             Environment = ServiceProviderInstance.Instance.GetRequiredService<IWebHostEnvironment>();
+            //var httpContext = DependencyResolver.Current.GetService<IHttpContextAccessor>()?.HttpContext;
         }
         #region 属性
 
@@ -192,7 +194,11 @@ namespace SmartCore.Services
         /// 主机
         /// </summary>
         public string Host => HttpContext == null ? Dns.GetHostName() : GetClientHostName();
-
+        /// <summary>
+        /// 是否为https
+        /// </summary>
+        public bool IsSecureConnection => HttpContext!=null? HttpContext.Request.IsHttps:false;
+        public string RawUrl => HttpContext?.Request.GetDisplayUrl();
         /// <summary>
         /// 获取Web客户端主机名
         /// </summary>

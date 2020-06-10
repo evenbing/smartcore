@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Threading;
 
 namespace SmartCore.Infrastructure.Orm
 {
@@ -14,10 +15,9 @@ namespace SmartCore.Infrastructure.Orm
             dbConfig = ConfigUtil.GetAppSettings<DbConfig>("DbConfig"); 
         }
         #region 全局变量
-        /// <summary>
-        /// 主库数据库连接字符串 from 配置文件
-        /// </summary>
-       // private static readonly string connectionString = ConfigUtil.GetConfigValueByKey();
+       
+        private static ThreadLocal<DataSourceEnum> _dataSourceEnum = new ThreadLocal<DataSourceEnum>();
+
         #endregion
 
         #region 属性
@@ -31,13 +31,22 @@ namespace SmartCore.Infrastructure.Orm
         /// <summary>
         /// end库连接字符串 属性  from 配置文件
         /// </summary>
-        public static string SlaveDbConnectionString
+        public static List<string> SlaveDbConnectionString
         {
             get { return dbConfig.AppSlaveDbConnection; }
         }
         public static string CurrentDatabaseType
         {
             get { return dbConfig.DatabaseType; }
+        }
+        /// <summary>
+        /// 当前线程数据源 
+        /// </summary>
+        /// <param name="sourceEnum"></param>     
+        public static DataSourceEnum DataSource
+        {
+            set { _dataSourceEnum.Value = value; }
+            get { return _dataSourceEnum.Value; }
         }
         #endregion
 
@@ -47,7 +56,7 @@ namespace SmartCore.Infrastructure.Orm
         /// </summary> 
         /// <param name="connectionString">连接字符串</param>
         /// <returns>IDbConnection</returns>
-        public static IDbConnection CreateConnection(DatabaseType dbType,string connectionString)
+        public static IDbConnection CreateConnection(DatabaseTypeEnum dbType,string connectionString)
         {
 
             try
@@ -55,17 +64,17 @@ namespace SmartCore.Infrastructure.Orm
                 IDbConnection conn = null;
                 switch (dbType)
                 {
-                    case DatabaseType.SqlServer:
+                    case DatabaseTypeEnum.SqlServer:
                         conn = new System.Data.SqlClient.SqlConnection(connectionString);
                         break;
-                    case DatabaseType.MySql:
+                    case DatabaseTypeEnum.MySql:
                         conn = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
                         break;
-                    case DatabaseType.Oracle:
+                    case DatabaseTypeEnum.Oracle:
                         //connection = new Oracle.DataAccess.Client.OracleConnection(strConn);
                         //connection = new System.Data.OracleClient.OracleConnection(strConn);
                         break;
-                    case DatabaseType.DB2:
+                    case DatabaseTypeEnum.DB2:
                         //conn = new System.Data.OleDb.OleDbConnection(connectionString);
                         break;
                 }
@@ -94,15 +103,38 @@ namespace SmartCore.Infrastructure.Orm
         }
         #endregion
 
+        #region 打开从库连接字符串
+        /// <summary>
+        /// 打开从库连接字符串
+        /// </summary>
+        /// <returns></returns>
+        public static IDbConnection OpenSlaveConnection()
+        {
+            var dbType = GetDataBaseType(CurrentDatabaseType);
+            int slaveDbConnectionCount = SlaveDbConnectionString.Count;
+            if (slaveDbConnectionCount > 0)
+            {
+                Random random = new Random();
+                int index = random.Next(0, slaveDbConnectionCount-1);
+                return CreateConnection(dbType, SlaveDbConnectionString[index]);
+            }
+            else
+            { 
+                return OpenConnection();
+            } 
+        }
+        #endregion
+
+        #region 私有方法 转换数据库类型
         /// <summary>
         /// 转换数据库类型
         /// </summary>
         /// <param name="databaseType">数据库类型</param>
         /// <returns></returns>
-        private static DatabaseType GetDataBaseType(string databaseType)
+        private static DatabaseTypeEnum GetDataBaseType(string databaseType)
         {
-            DatabaseType returnValue = DatabaseType.SqlServer;
-            foreach (DatabaseType dbType in Enum.GetValues(typeof(DatabaseType)))
+            DatabaseTypeEnum returnValue = DatabaseTypeEnum.SqlServer;
+            foreach (DatabaseTypeEnum dbType in Enum.GetValues(typeof(DatabaseTypeEnum)))
             {
                 if (dbType.ToString().Equals(databaseType, StringComparison.OrdinalIgnoreCase))
                 {
@@ -112,6 +144,13 @@ namespace SmartCore.Infrastructure.Orm
             }
             return returnValue;
         }
+        #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryOrExecSqlFunc"></param>
+        /// <returns></returns>
         private T UseDbConnection<T>(Func<IDbConnection, T> queryOrExecSqlFunc)
         {
             IDbConnection dbConn = null;
@@ -134,14 +173,6 @@ namespace SmartCore.Infrastructure.Orm
         } 
     }
 
-    public enum DatabaseType
-    {
-        SqlServer,  //SQLServer数据库
-        MySql,      //Mysql数据库
-        Npgsql,     //PostgreSQL数据库
-        Oracle,     //Oracle数据库
-        Sqlite,     //SQLite数据库
-        DB2         //IBM DB2数据库
-    }
+ 
 
 }

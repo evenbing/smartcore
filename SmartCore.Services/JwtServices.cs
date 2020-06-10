@@ -71,6 +71,7 @@ namespace SmartCore.Services
             string jti = Guid.NewGuid().ToString("N");
             //每次登陆动态刷新
             string redisValue = string.Concat(userConfoundId, "|", currentTimeStamp, "|", expiredTimeStamp,"|",Guid.NewGuid().ToString("N"));
+            Const.ValidAudience = redisValue;
             //将用户信息添加到 Claim 中
             var claimsIdentity = new ClaimsIdentity(new[]
                 {
@@ -105,9 +106,9 @@ namespace SmartCore.Services
                 access_token = new AccessToken { token = tokenHandler.WriteToken(token), expired = expiredTimeStamp, expires_in = tokenSetting.AccessExpiration },
                 refresh_token = new AccessToken { token = refreshToken, expired = refreshExpiredTimeStamp, expires_in = tokenSetting.RefreshExpiration }
             };
-            await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
-            await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
-            return result;
+           // await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
+            //await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
+            return await Task.FromResult(result);
         }
         /// <summary>
         /// 

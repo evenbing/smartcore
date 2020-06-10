@@ -95,11 +95,16 @@ namespace SmartCore.Services
         public async Task<JwtAuthorizationDTO> SignIn(UserLoginDTO userLoginDTO)
         {
             //判断用户的账号是否在数据表中存在
-             if(_userRepository.CheckUser)
-            UserTokenDTO userTokenDTO = new UserTokenDTO();
-            userTokenDTO.Id = 0;
-           var result= await _jwtServices.GenerateSecurityToken(userTokenDTO);
-            return result;
+            var userInfo =await _userRepository.CheckUser(userLoginDTO.Username);
+            if (userInfo!=null&& userInfo.Id>0)
+            {
+                UserTokenDTO userTokenDTO = new UserTokenDTO();
+                userTokenDTO.Id = userInfo.Id;
+                userTokenDTO.UserName = userInfo.UserName; 
+                var result = await _jwtServices.GenerateSecurityToken(userTokenDTO);
+                return result;
+            }
+            return null;
         } 
     }
 }

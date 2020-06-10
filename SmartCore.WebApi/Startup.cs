@@ -114,7 +114,7 @@ namespace SmartCore.WebApi
             {
                 //Do some work here System.Environment.MachineName
                 context.Response.Headers.Add("X-SererName",Common.MachineNameWithHide);
-                context.Response.Headers.Add("X-TraceId", context?.TraceIdentifier);
+                context.Response.Headers.Add("X-Correlation-ID", context?.TraceIdentifier);
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
             });
@@ -129,7 +129,7 @@ namespace SmartCore.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                 });
             }
             else if (!env.IsProduction())

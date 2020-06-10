@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\System\AdminController %282%29.cs" />
     <Compile Remove="ServiceProviderInstance.cs" />
   </ItemGroup>
 

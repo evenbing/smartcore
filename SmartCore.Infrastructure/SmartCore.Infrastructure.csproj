@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="IOC\Ioc.cs" />
+    <Compile Remove="Logger\LogManager.cs" />
     <Compile Remove="Orm\OracleDynamicParameters.cs" />
     <Compile Remove="WebHelper.cs" />
   </ItemGroup>

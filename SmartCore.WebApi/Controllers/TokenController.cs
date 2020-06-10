@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartCore.Models.DTO;
@@ -36,6 +37,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [Route("GetRandomToken")]
         [HttpGet]
         public async Task<IActionResult> GetRandomToken()

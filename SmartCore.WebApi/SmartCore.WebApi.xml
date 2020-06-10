@@ -88,12 +88,6 @@
             </summary>
             <param name="userService"></param>
         </member>
-        <member name="M:SmartCore.WebApi.UsersController.GetUsersList">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:SmartCore.WebApi.Program">
             <summary>
             
@@ -180,6 +174,29 @@
             </summary>
         </member>
         <member name="M:WebApi.Controllers.AdminController.GetControllers">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WebApi.Controllers.RedisCacheController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.GetRedisValue(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.EnqueueItemOn(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.DequeueItem(System.String)">
             <summary>
             
             </summary>

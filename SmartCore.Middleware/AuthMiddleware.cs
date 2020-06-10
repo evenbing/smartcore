@@ -53,21 +53,22 @@ namespace SmartCore.Middleware
                     //这里采用动态验证的方式，在退出、修改密码、重新登陆等动作时，刷新token，旧token就强制失效了 也可以用常量的形式，ValidAudience = tokenSetting.Audience,
                     AudienceValidator = (m, n, z) =>
                     {
-                        if (n!=null)
+                        if (m != null&& n!=null)
                         {
-                            var jwtSecurityToken = n as JwtSecurityToken;
-                            string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
-                            string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
-                            int userKeyId = DigitsUtil.RadixString(userId);
-                            if (userKeyId>0)
-                            {
-                                string redisKey = $"user:{deviceType}:token:{userKeyId}";
-                                string audience = CacheManager.Instance.Get(redisKey).Result;
-                                if (!string.IsNullOrEmpty(audience))
-                                { 
-                                    return m != null && m.FirstOrDefault().Equals(audience);
-                                }
-                            } 
+                            return  m.FirstOrDefault().Equals(Const.ValidAudience);
+                            //var jwtSecurityToken = n as JwtSecurityToken;
+                            //string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
+                            //string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
+                            //int userKeyId = DigitsUtil.RadixString(userId);
+                            //if (userKeyId>0)
+                            //{
+                            //    string redisKey = $"user:{deviceType}:token:{userKeyId}";
+                            //    string audience = CacheManager.Instance.Get(redisKey).Result;
+                            //    if (!string.IsNullOrEmpty(audience))
+                            //    { 
+                            //        return m.FirstOrDefault().Equals(audience);
+                            //    }
+                            //} 
                         }
                         return false; 
                     }, 
@@ -90,6 +91,16 @@ namespace SmartCore.Middleware
                 //};
                 x.Events = new JwtBearerEvents
                 {
+                    OnMessageReceived = context=> 
+                    { 
+                        context.HttpContext.Request.Headers.TryGetValue("Authorization",out var authorization);
+                        var accessToken = authorization.FirstOrDefault()?.Split(' ');
+                        if (accessToken!=null&&accessToken.Length == 2)
+                        { 
+                            context.Token = accessToken[1];
+                        }
+                        return Task.CompletedTask;
+                    },
                     //此处为权限验证失败后触发的事件
                     OnChallenge = context =>
                     {
@@ -98,22 +109,37 @@ namespace SmartCore.Middleware
                         //自定义返回的数据类型
                         context.Response.ContentType = "application/json";
                         //自定义返回状态码，默认为401 我这里改成 200
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        //context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.HttpContext.Request.Headers.TryGetValue("Referer", out var referer);
+                        var refererUrl = referer.FirstOrDefault()?.ToString();
                         //自定义自己想要返回的数据结果，我这里要返回的是Json对象，通过引用Newtonsoft.Json库进行转换
                         var result = new ApiResultModels();
-                        result.code = context.Response.StatusCode;
+                        result.code = StatusCodes.Status401Unauthorized;
                         result.message = "很抱歉，您无权访问该接口!";
+                        result.data = refererUrl;
                         //context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         //输出Json数据结果
                         context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                         return Task.FromResult(0);
                     },
                     OnAuthenticationFailed = context =>
-                    {
+                    {  
+                        //自定义返回的数据类型
+                        context.Response.ContentType = "application/json";
+                        context.HttpContext.Request.Headers.TryGetValue("Referer", out var referer);
+                        var refererUrl = referer.FirstOrDefault()?.ToString();
+                        //var applicationUrl = $"{context.Request.Scheme}://{context.Request.Host.Value}";
                         //如果过期，则把<是否过期>添加到，返回头信息中
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
-                            context.Response.Headers.Add("Token-Expired", "true");
+                            var result = new ApiResultModels();
+                            result.code = StatusCodes.Status419AuthenticationTimeout;
+                            result.message = "很抱歉，您无权访问该接口，登录凭证已过期，请重新登录!";
+                            result.data = refererUrl;
+                            //context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            //输出Json数据结果
+                            context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                            //context.Response.Headers.Add("Token-Expired", "true");
                         }
                         return Task.CompletedTask;
                     }

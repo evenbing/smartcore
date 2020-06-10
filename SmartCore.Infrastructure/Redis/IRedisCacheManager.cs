@@ -179,92 +179,101 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
         /// <param name="expiry"></param>
-        Task HSet(string hashId, string key, string value, TimeSpan? expiry = null);
+        Task<bool> HSet(string key, string dataKey, string value, TimeSpan? expiry = null);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="value"></param>
+        /// <param name="expireTime"></param>
+        /// <returns></returns>
+        Task<bool> HSet(string key, string dataKey, string value, DateTime? expireTime);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="value"></param>
+        /// <param name="expiry"></param>
+        Task<bool> HSet<T>(string key, string dataKey, T value, TimeSpan? expiry = null);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        Task<string> HGet(string key, string dataKey);
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="hashId"></param>
         /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiry"></param>
-         Task<bool> HSet<T>(string hashId, string key, T value, TimeSpan? expiry = null);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hashId"></param>
-        /// <param name="key"></param>
         /// <returns></returns>
-         Task<string> HGet(string hashId, string key);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-         Task<T> HGet<T>(string hashId, string key);
+         Task<T> HGet<T>(string key, string dataKey);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-         Task<long> HIncr(string hashId, string key, int value = 1);
+        Task<long> HIncr(string key, string dataKey, int value = 1);
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-         Task<long> HDecr(string hashId, string key, int value = 1);
+        Task<long> HDecr(string key, string dataKey, int value = 1);
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        Task<bool> HExists(string key, string dataKey);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        Task<bool> HRemove(string key, string dataKey);
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-         Task<bool> HExists(string hashId, string key);
+         Task<bool> HRemoveAll(string key);
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-         Task<bool> HRemove(string hashId, string key);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hashId"></param>
-        /// <returns></returns>
-         Task<bool> HRemoveAll(string hashId);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hashId"></param>
-        /// <returns></returns>
-         Task<List<string>> HKeys(string hashId);
+         Task<List<string>> HKeys(string key);
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-         Task<List<T>> HValues<T>(string hashId);
+         Task<List<T>> HValues<T>(string key);
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-         Task<HashSet<T>> HGetAll<T>(string hashId);
+         Task<HashSet<T>> HGetAll<T>(string key);
         #endregion
 
         #region set 缓存
@@ -403,11 +412,29 @@ namespace SmartCore.Infrastructure.Redis
 
         #region SortedSet缓存
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="setId"></param>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+         Task<double> SortedSetIncrement(string key, string setId, double increment);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="start">开始位置</param>
+        /// <param name="end">取多少条数据</param>
+        /// <param name="sortRule">排序规则 默认降序排序</param>
+        /// <returns></returns>
+        Task<List<T>> SortedSetRangeByRank<T>(string key, int start = 0, int end = 10, int sortRule = 1);
+        /// <summary>
         /// SortedSet缓存
         /// </summary>
         /// <param name="setId"></param>
         /// <returns></returns>
-         Task<long> SortedSetCount(string setId);
+        Task<long> SortedSetCount(string setId);
         /// <summary>
         /// 
         /// </summary>
