@@ -92,6 +92,7 @@ namespace SmartCore.Middleware
                 //};
                 x.Events = new JwtBearerEvents
                 {
+                 
                     OnMessageReceived = context=> 
                     { 
                         context.HttpContext.Request.Headers.TryGetValue("Authorization",out var authorization);
@@ -144,6 +145,13 @@ namespace SmartCore.Middleware
                         }
                         return Task.CompletedTask;
                     }
+                    //,
+                    //OnTokenValidated = context => {
+                    //    System.Threading.Thread.CurrentPrincipal =
+                    //     new System.Security.Principal.GenericPrincipal(
+                    //         new System.Security.Principal.GenericIdentity(context.HttpContext.User.Identity.Name), new string[] { });
+                    //    return Task.CompletedTask;
+                    //}
 
                 };
             });

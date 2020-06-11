@@ -885,5 +885,62 @@ namespace SmartCore.Repository.Base.Impl
             throw new ArgumentException("存储过程为空");
         }
         #endregion
+
+
+        //public static bool DeleteAfterUpdating()
+        //{
+        //    return ExecuteWithTransaction((conn, trans) =>
+        //    {
+        //        var r = conn.Execute(@"update Person set password='www.lanhuseo.com' where id=@id", new { id = 1009 }, trans,
+        //            null, null);
+        //        r += conn.Execute("delete from Person where id=@id", new { id = 1010 }, trans, null, null);
+
+        //        return r;
+        //    });
+        //}
+
+        ///// <summary>
+        /////     Used for query
+        ///// </summary>
+        ///// <param name="action"></param>
+        //public static  ExecuteWithoutTransaction(Action<SqlConnection> action)
+        //{
+        //    UseConnectObj(action);
+        //}
+
+        ///// <summary>
+        /////     Used for cud
+        ///// </summary>
+        ///// <returns>Execute Result</returns>
+        ///// <param name="func"></param>
+        //public  bool ExecuteWithTransaction(Func<SqlConnection, IDbTransaction, int> func)
+        //{
+        //    var r = 0;
+
+        //    UseConnectObj(conn =>
+        //    {
+        //        IDbTransaction trans = conn.BeginTransaction();
+
+        //        r = func(conn, trans);
+
+        //        trans.Commit();
+        //    });
+
+        //    return r > 0;
+        //}
+
+        ///// <summary>
+        /////     Use Action Connection
+        ///// </summary>
+        ///// <param name="action"></param>
+        //public  void UseConnectObj(Action<SqlConnection> action)
+        //{
+        //    using (var conn = new SqlConnection(ConnString))
+        //    {
+        //        conn.Open();
+        //        action(conn);
+        //    }
+        //}
+
     }
 }

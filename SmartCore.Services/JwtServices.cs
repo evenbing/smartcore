@@ -35,13 +35,12 @@ namespace SmartCore.Services
     {
 
         private string _base64Secret;
-        private JwtConfig tokenSetting = new JwtConfig();//ILogger logger   _logger = logger;
+        private JwtConfig tokenSetting = new JwtConfig();//ILogger logger   _logger = logger;ILoggerFactory logger
 
         private ILoggerFactory _logger;
-        public JwtServices(ILoggerFactory logger)
+        public JwtServices()
         {
             tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig"); 
-            _logger = logger;
         }
         /// <summary>
         /// 获取到加密串
@@ -67,7 +66,7 @@ namespace SmartCore.Services
             if (tokenSetting.AccessExpiration == 0)
             {
                 tokenSetting.AccessExpiration = 120;
-            }
+            } 
             string userConfoundId = DigitsUtil.ConvertTo62RadixString(userTokenDTO.Id);
             string deviceType = DeviceType;
             DateTime nowTime = DateTime.UtcNow;

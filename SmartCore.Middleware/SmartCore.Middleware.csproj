@@ -23,4 +23,8 @@
     <ProjectReference Include="..\SmartCore.Services\SmartCore.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
+
 </Project>
