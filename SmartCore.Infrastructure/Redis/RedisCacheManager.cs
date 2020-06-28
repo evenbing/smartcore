@@ -10,17 +10,21 @@ using System.Threading.Tasks;
 
 namespace SmartCore.Infrastructure.Redis
 {
-    public class RedisHelper : IRedisHelper, IDisposable
+    /// <summary>
+    /// 
+    /// </summary>
+    public class RedisCacheManager : IRedisCacheManager, IDisposable
     {
         #region 全局变量
         /// <summary>
         /// 配置redis host
         /// </summary>
-        public static readonly RedisConfigs configInfo = new RedisConfigs();
+        public static readonly RedisConfig configInfo = Config.ConfigUtil.GetAppSettings<RedisConfig>("RedisConfig");
         /// <summary>
         /// 私有变量 ConnectionMultiplexer
         /// </summary>
-        private static ConnectionMultiplexer _instance = null;
+        private static volatile ConnectionMultiplexer _instance = null;
+
         /// <summary>
         /// 默认数据库下标
         /// </summary>
@@ -28,7 +32,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 线程锁
         /// </summary>
-        private static object _locker = new Object();
+        private static object _locker = new object();
         #endregion
         #region ConnectionMultiplexer管理
         /// <summary>
@@ -65,7 +69,7 @@ namespace SmartCore.Infrastructure.Redis
                 options.Password = configInfo.Password;
             }
             options.SyncTimeout = configInfo.SyncTimeout;
-            options.ConnectTimeout = configInfo.ConnectTimeout;
+            options.ConnectTimeout = configInfo.ConnectTimeout;//15000标识15s
             options.KeepAlive = 180;
             options.AbortOnConnectFail = false;
 
@@ -81,8 +85,10 @@ namespace SmartCore.Infrastructure.Redis
             return _instance;
         }
         #endregion
+
+        #region 获取redis服务器
         /// <summary>
-        /// 
+        /// 获取redis服务器
         /// </summary>
         /// <returns></returns>
         protected IServer GetServer()
@@ -105,6 +111,8 @@ namespace SmartCore.Infrastructure.Redis
                     .ToList();
             return masters;
         }
+        #endregion
+
         #region 转换方法
         /// <summary>
         /// 
@@ -216,6 +224,7 @@ namespace SmartCore.Infrastructure.Redis
             return "";
         }
         #endregion
+
         #region 获取redis服务器当前时间
         /// <summary>
         /// 获取redis服务器当前时间
@@ -228,6 +237,46 @@ namespace SmartCore.Infrastructure.Redis
         }
         #endregion
 
+        #region 分布式锁 
+        /// <summary>
+        /// 分布式锁
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="timeOut"></param>
+        /// <param name="lockValue"></param>
+        /// <returns></returns>
+        public async Task<string> LockTake(string key, TimeSpan? timeOut)
+        {
+            var random = new Random();
+            string lockValue = string.Format("lock_{0}_{1}", GetRedisTime().Ticks, random.Next());
+            if (timeOut == null || timeOut.Value.TotalSeconds < 10)
+                timeOut = new TimeSpan(0, 0, 10);
+            RedisValue redisValue = ConvertJson(lockValue);
+            bool result = await Do(db => db.LockTakeAsync(key, redisValue, timeOut.GetValueOrDefault()));
+            return lockValue;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="lockValue"></param>
+        /// <returns></returns>
+        public async Task<bool> LockRelease(string key, string lockValue)
+        {
+            var result = await Do(db => db.LockReleaseAsync(key, lockValue));
+            return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        public async Task<bool> RemoveLock(string key)
+        {
+            return await Remove(key);
+        }
+        #endregion
+
+        #region 打开操作库
         /// <summary>
         /// 打开操作库
         /// </summary>
@@ -259,19 +308,33 @@ namespace SmartCore.Infrastructure.Redis
 
             return default(T);
         }
+        #endregion
 
+        #region 创建事务对象
+        /// <summary>
+        /// 创建事务对象
+        /// </summary>
+        /// <returns></returns>
         public ITransaction CreateTransaction()
         {
             return GetDatabase().CreateTransaction();
         }
+        #endregion
 
+        #region 获取redis数据库
+        /// <summary>
+        /// 获取redis数据库
+        /// </summary>
+        /// <returns></returns>
         public IDatabase GetDatabase()
         {
             return Instance.GetDatabase(defaultDb);
         }
+        #endregion
+
         #region key管理相关
         /// <summary>
-        /// 
+        /// 获取key的过期时间
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -312,18 +375,18 @@ namespace SmartCore.Infrastructure.Redis
 
         #region 执行lua脚本
         /// <summary>
-        /// 
+        /// 执行lua脚本
         /// </summary>
-        /// <param name="luaBody"></param>
+        /// <param name="luaBody">lua脚本</param>
         public async Task<RedisResult> ExecLua(string luaBody)
         {
             return await Do(db => db.ScriptEvaluateAsync(luaBody));
         }
         #endregion
 
-        #region 发布订阅
+        #region 发布&订阅
         /// <summary>
-        /// 
+        /// 发布
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="channel"></param>
@@ -336,7 +399,7 @@ namespace SmartCore.Infrastructure.Redis
             return await sub.PublishAsync(channel, ConvertJson(msg));
         }
         /// <summary>
-        /// 
+        /// 订阅
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="onMessageHandler"></param>
@@ -352,7 +415,7 @@ namespace SmartCore.Infrastructure.Redis
             });
         }
         /// <summary>
-        /// 
+        /// 取消订阅
         /// </summary>
         /// <param name="channel"></param>
         public async Task UnSubscribe(string channel)
@@ -364,7 +427,7 @@ namespace SmartCore.Infrastructure.Redis
 
         #region 缓存基本操作
         /// <summary>
-        /// 
+        /// 获取redis缓存中的值
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
@@ -375,26 +438,26 @@ namespace SmartCore.Infrastructure.Redis
             return ConvertObj<T>(result);
         }
         /// <summary>
-        /// 
+        /// 获取redis缓存中的值 返回类型 字符串
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public async Task<string> Get(string key)
         {
-            var str = await Get<string>(key);
-            if (!string.IsNullOrEmpty(str) && str.StartsWith("\"") && str.EndsWith("\""))
+            var str = await Do(db => db.StringGetAsync(key));
+            if (!string.IsNullOrEmpty(str) && str.StartsWith("\""))
             {
                 str = System.Text.RegularExpressions.Regex.Unescape(str);
             }
             return str;
         }
         /// <summary>
-        /// 
+        /// 获取redis缓存中多个key下的值
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
         public async Task<IDictionary<string, string>> GetAll(IEnumerable<string> keys)
-        {
+        { 
             var result = new Dictionary<string, string>();
             foreach (var key in keys)
             {
@@ -403,12 +466,11 @@ namespace SmartCore.Infrastructure.Redis
                 {
                     result.Add(key, item);
                 }
-            }
-
+            } 
             return result;
         }
         /// <summary>
-        /// 
+        /// 设置redis值 
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -416,10 +478,37 @@ namespace SmartCore.Infrastructure.Redis
         /// <returns></returns>
         public async Task<bool> Set(string key, string value, DateTime? expiresAt = null)
         {
-            return await Set<string>(key, value, expiresAt);
+            if (expiresAt.HasValue)
+            {
+                return await Do(db => db.StringSetAsync(key, value, expiresAt - DateTime.Now));
+            }
+            else
+            {
+                return await Do(db => db.StringSetAsync(key, value));
+            }
         }
         /// <summary>
         /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        public async Task<bool> Set(string key, string value, long expiredTimeStamp)
+        {
+            if (expiredTimeStamp > 0)
+            {
+                long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                long timeSpanTimestamp = expiredTimeStamp - currentTimestamp;
+                return await Do(db => db.StringSetAsync(key, value, TimeSpan.FromSeconds(timeSpanTimestamp)));
+            }
+            else
+            {
+                return await Do(db => db.StringSetAsync(key, value));
+            }
+        }
+        /// <summary>
+        /// 设置redis值 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
@@ -438,9 +527,30 @@ namespace SmartCore.Infrastructure.Redis
                 return await Do(db => db.StringSetAsync(key, json));
             }
         }
-
         /// <summary>
-        /// 如果存在，那么则附加到原来的列表中
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiredTimeStamp"></param>
+        /// <returns></returns>
+        public async Task<bool> Set<T>(string key, T value, long expiredTimeStamp)
+        {
+            string json = ConvertJson(value);
+            if (expiredTimeStamp > 0)
+            {
+                long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                long timeSpanTimestamp = expiredTimeStamp - currentTimestamp;
+                return await Do(db => db.StringSetAsync(key, json, TimeSpan.FromSeconds(timeSpanTimestamp)));
+            }
+            else
+            {
+                return await Do(db => db.StringSetAsync(key, json));
+            }
+        }
+        /// <summary>
+        /// 设置redis值  如果存在，那么则附加到原来的列表中
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
@@ -451,8 +561,6 @@ namespace SmartCore.Infrastructure.Redis
             string json = ConvertJson(value);
             return await Do(db => db.StringAppendAsync(key, json));
         }
-
-
         #endregion
 
         #region 自增
@@ -497,141 +605,184 @@ namespace SmartCore.Infrastructure.Redis
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
-        /// <param name="expiry"></param>
-        public async Task HSet(string hashId, string key, string value, TimeSpan? expiry = null)
-        {
-            var db = Instance.GetDatabase(defaultDb);
-           await db.HashSetAsync(hashId, key, value);
-            if (expiry.HasValue)
+        /// <param name="expireTime"></param>
+        /// <example>HSet("student1", "name", "张三");</example>
+        /// <remarks></remarks>
+        public async Task<bool> HSet(string key, string dataKey, string value, TimeSpan? expireTime = null)
+        { 
+            return await Do(db =>
             {
-                await db.KeyExpireAsync(hashId, expiry);
+                var result = db.HashSetAsync(key, dataKey, value);
+                if (expireTime.HasValue)
+                {
+                    return db.KeyExpireAsync(key, expireTime);
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            ); 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="value"></param>
+        /// <param name="expireTime"></param>
+        /// <returns></returns>
+        public async Task<bool> HSet(string key, string dataKey, string value,DateTime? expireTime)
+        {
+            if (expireTime.HasValue)
+            {
+                TimeSpan timeSpan = expireTime.Value - DateTime.Now;
+                return await HSet(key, dataKey, value, timeSpan);
+            }
+            else
+            {
+                return await HSet(key, dataKey, value);
             }
         }
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
-        /// <param name="expiry"></param>
-        public async Task<bool> HSet<T>(string hashId, string key, T value, TimeSpan? expiry = null)
+        /// <param name="expireTime"></param>
+        public async Task<bool> HSet<T>(string key, string dataKey, T value, TimeSpan? expireTime = null)
         {
-            var db = Instance.GetDatabase(defaultDb);
-           var result= await db.HashSetAsync(hashId, key, ConvertJson(value));
-            if (expiry.HasValue)
+            //var db = Instance.GetDatabase(defaultDb);
+            //var result = await db.HashSetAsync(hashId, key, ConvertJson(value));
+            //if (expireTime.HasValue)
+            //{
+            //    await db.KeyExpireAsync(hashId, expireTime.Value);
+            //}
+            //return result;
+          return  await Do(db =>
             {
-                await db.KeyExpireAsync(hashId, expiry.Value);
+                var result = db.HashSetAsync(key, dataKey, ConvertJson(value));
+                if (expireTime.HasValue)
+                {
+                    return db.KeyExpireAsync(key, expireTime);
+                }
+                else
+                {
+                    return result;
+                }
             }
-            return result;
+           );
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <returns></returns>
-        public async Task<string> HGet(string hashId, string key)
-        {
-            return await Do(db => db.HashGetAsync(hashId, key));
+        /// <example>HGet("student1", "name")</example>
+        public async Task<string> HGet(string key, string dataKey)
+        { 
+            return await Do(db => db.HashGetAsync(key, dataKey));
         }
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <returns></returns>
-        public async Task<T> HGet<T>(string hashId, string key)
+        public async Task<T> HGet<T>(string key, string dataKey)
         {
-            var result=await Do(db => db.HashGetAsync(hashId, key));
+            var result = await Do(db => db.HashGetAsync(key, dataKey));
             return ConvertObj<T>(result);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public async Task<long> HIncr(string hashId, string key, int value = 1)
+        public async Task<long> HIncr(string key, string dataKey, int value = 1)
         {
-            return await Do(db => db.HashIncrementAsync(hashId, key, value));
+            return await Do(db => db.HashIncrementAsync(key, dataKey, value));
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
+        /// <param name="dataKey"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public async Task<long> HDecr(string hashId, string key, int value = 1)
+        public async Task<long> HDecr(string key, string dataKey, int value = 1)
         {
-            return await Do(db => db.HashDecrementAsync(hashId, key, value));
+            return await Do(db => db.HashDecrementAsync(key, dataKey, value));
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        public async Task<bool> HExists(string key, string dataKey)
+        {
+            return await Do(db => db.HashExistsAsync(key, dataKey));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        public async Task<bool> HRemove(string key, string dataKey)
+        {
+            return await Do(db => db.HashDeleteAsync(key, dataKey));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<bool> HExists(string hashId, string key)
+        public async Task<bool> HRemoveAll(string key)
         {
-            return await Do(db => db.HashExistsAsync(hashId, key));
+            return await Do(db => db.KeyDeleteAsync(key));
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hashId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<bool> HRemove(string hashId, string key)
+        public async Task<List<string>> HKeys(string key)
         {
-            return await Do(db => db.HashDeleteAsync(hashId, key));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hashId"></param>
-        /// <returns></returns>
-        public async Task<bool> HRemoveAll(string hashId)
-        {
-            return await Do(db => db.KeyDeleteAsync(hashId));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hashId"></param>
-        /// <returns></returns>
-        public async Task<List<string>> HKeys(string hashId)
-        {
-            var result= await Do(db => db.HashKeysAsync(hashId));
+            var result = await Do(db => db.HashKeysAsync(key));
             return ConvertList<string>(result);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<List<T>> HValues<T>(string hashId)
+        public async Task<List<T>> HValues<T>(string key)
         {
-            var result=await Do(db => db.HashValuesAsync(hashId));
+            var result = await Do(db => db.HashValuesAsync(key));
             return ConvertList<T>(result);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hashId"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<HashSet<T>>  HGetAll<T>(string hashId)
+        public async Task<HashSet<T>> HGetAll<T>(string key)
         {
-            var result=await Do(db => db.HashGetAllAsync(hashId));
+            var result = await Do(db => db.HashGetAllAsync(key));
             if (result != null)
             {
                 return ConvertHashSet<T>(result.Select(h => h.Value).ToArray());
@@ -652,10 +803,10 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="expireIn"></param>
         public async Task<bool> SAdd(string key, string value, TimeSpan? expireIn = null)
         {
-            var result =await Do(db => db.SetAddAsync(key, value));
+            var result = await Do(db => db.SetAddAsync(key, value));
             if (result && expireIn.HasValue)
             {
-                await  Do(db => db.KeyExpireAsync(key, expireIn));
+                await Do(db => db.KeyExpireAsync(key, expireIn));
             }
             return result;
         }
@@ -668,7 +819,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="expireIn"></param>
         public async Task<bool> SAdd<T>(string key, T value, TimeSpan? expireIn = null)
         {
-            var result =await Do(db => db.SetAddAsync(key, ConvertJson(value)));
+            var result = await Do(db => db.SetAddAsync(key, ConvertJson(value)));
             if (result && expireIn.HasValue)
             {
                 await Do(db => db.KeyExpireAsync(key, expireIn));
@@ -688,7 +839,7 @@ namespace SmartCore.Infrastructure.Redis
 
             var storedList = new List<RedisValue>();
             values.ForEach(t => storedList.Add(ConvertJson(t)));
-            var result =await Do(db => db.SetAddAsync(key, storedList.ToArray()));
+            var result = await Do(db => db.SetAddAsync(key, storedList.ToArray()));
             if (result > 0 && expireIn.HasValue)
             {
                 Do(db => db.KeyExpire(key, expireIn));
@@ -702,7 +853,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="value"></param>
         public async Task<bool> SRem(string key, string value)
         {
-           return await Do(db => db.SetRemoveAsync(key, value));
+            return await Do(db => db.SetRemoveAsync(key, value));
         }
         /// <summary>
         /// 
@@ -722,7 +873,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <returns></returns>
         public async Task<HashSet<string>> SGetAll(string key)
         {
-            var result= await Do(db => db.SetMembersAsync(key));
+            var result = await Do(db => db.SetMembersAsync(key));
             return ConvertHashSet(result);
         }
         /// <summary>
@@ -733,7 +884,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <returns></returns>
         public async Task<HashSet<T>> SGetAll<T>(string key)
         {
-            var result=await Do(db => db.SetMembersAsync(key));
+            var result = await Do(db => db.SetMembersAsync(key));
             return ConvertHashSet<T>(result);
         }
         /// <summary>
@@ -776,13 +927,10 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="listId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool AddItemToList<T>(string listId, T value)
+        public async Task<bool> AddItemToList<T>(string listId, T value)
         {
-            return Do(db =>
-            {
-                var result = db.ListRightPush(listId, ConvertJson(value));
-                return result > 0;
-            });
+            var result = await Do(db => db.ListRightPushAsync(listId, ConvertJson(value)));
+            return result > 0;
         }
         /// <summary>
         /// 
@@ -790,12 +938,18 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="listId"></param>
         /// <param name="list"></param>
 
-        public void AddRangeToList(string listId, List<string> list)
+        public async Task<bool> AddRangeToList(string listId, List<string> list)
         {
+            int successNum = 0;
             foreach (var item in list)
             {
-                Do(db => db.ListRightPush(listId, item));
+                var result = await Do(db => db.ListRightPushAsync(listId, item));
+                if (result > 0)
+                {
+                    successNum++;
+                }
             }
+            return successNum > 0;
         }
         /// <summary>
         /// 
@@ -803,23 +957,28 @@ namespace SmartCore.Infrastructure.Redis
         /// <typeparam name="T"></typeparam>
         /// <param name="listId"></param>
         /// <param name="list"></param>
-        public void AddRangeToList<T>(string listId, List<T> list)
+        public async Task<bool> AddRangeToList<T>(string listId, List<T> list)
         {
+            int successNum = 0;
             foreach (var item in list)
             {
-                Do(db => db.ListRightPush(listId, ConvertJson(item)));
+                var result = await Do(db => db.ListRightPushAsync(listId, ConvertJson(item)));
+                if (result > 0)
+                {
+                    successNum++;
+                }
             }
+            return successNum > 0;
         }
         /// <summary>
-        /// 
+        ///  获取集合中的数量
         /// </summary>
         /// <param name="listId"></param>
         /// <returns></returns>
-        public long GetListCount(string listId)
+        public async Task<long> GetListCount(string listId)
         {
-            return Do(db => db.ListLength(listId));
+            return await Do(db => db.ListLengthAsync(listId));
         }
-
 
         #region 队列操作
         /// <summary>
@@ -827,32 +986,28 @@ namespace SmartCore.Infrastructure.Redis
         /// </summary>
         /// <param name="listId"></param>
         /// <param name="value"></param>
-        public long EnqueueItemOnList(string listId, string value)
+        public async Task<long> EnqueueItemOnList(string listId, string value)
         {
-            return Do(db =>
-            {
-                long values = db.ListLeftPush(listId, value);
-                return values;
-            });
+            return await Do(db => db.ListRightPushAsync(listId, value));
         }
         /// <summary>
-        /// 
+        /// 出列
         /// </summary>
         /// <param name="listId"></param>
         /// <returns></returns>
-        public string DequeueItemFromList(string listId)
+        public async Task<string> DequeueItemFromList(string listId)
         {
-            return Do(db => db.ListLeftPop(listId));
+            return await Do(db => db.ListLeftPopAsync(listId));
         }
         /// <summary>
-        /// 
+        /// 出列
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="listId"></param>
         /// <returns></returns>
-        public T DequeueItemFromList<T>(string listId)
+        public async Task<T> DequeueItemFromList<T>(string listId)
         {
-            var item = Do(db => db.ListLeftPop(listId));
+            var item = await Do(db => db.ListLeftPopAsync(listId));
             return ConvertObj<T>(item);
         }
         #endregion
@@ -862,22 +1017,51 @@ namespace SmartCore.Infrastructure.Redis
         /// <typeparam name="T"></typeparam>
         /// <param name="listId"></param>
         /// <returns></returns>
-        public List<T> ListGetAll<T>(string listId)
+        public async Task<List<T>> ListGetAll<T>(string listId)
         {
-            var values = Do(db => db.ListRange(listId));
+            var values = await Do(db => db.ListRangeAsync(listId));
             return ConvertList<T>(values);
         }
         #endregion
 
-        #region SortedSet缓存
+        #region SortedSet缓存 有序排列，值不可重复。类似Set，不同的是sortedset的每个元素都会关联一个double类型的score，用此元素来进行排序 应用场景：显示文章被赞最多的十条评论
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="key"></param>
+        /// <param name="setId"></param>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+        public async Task<double> SortedSetIncrement(string key,string setId,double increment)
+        {
+            return await Do(db => db.SortedSetIncrementAsync(key, setId, increment));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortRule"></param>
+        /// <returns></returns>
+        public async Task<List<T>> SortedSetRangeByRank<T>(string key,int start=0,int end=10,int sortRule=1)
+        {
+            var result= await Do(db => db.SortedSetRangeByRankAsync(key, start, end,(Order)sortRule));
+            if (result != null)
+            {
+                return ConvertList<T>(result);
+            }
+            return null;
+        }
+        /// <summary>
+        /// SortedSet缓存
+        /// </summary>
         /// <param name="setId"></param>
         /// <returns></returns>
-        public long SortedSetCount(string setId)
+        public async Task<long> SortedSetCount(string setId)
         {
-            return Do(db => db.SortedSetLength(setId));
+            return await Do(db => db.SortedSetLengthAsync(setId));
         }
         /// <summary>
         /// 
@@ -887,12 +1071,11 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="value"></param>
         /// <param name="score"></param>
         /// <returns></returns>
-        public bool SortedSetAdd<T>(string setId, T value, double? score = null)
+        public async Task<bool> SortedSetAdd<T>(string setId, T value, double? score = null)
         {
             var storedValue = ConvertJson(value);
             var realScore = score ?? GetLexicalScore(storedValue);
-
-            return Do(db => db.SortedSetAdd(setId, storedValue, realScore));
+            return await Do(db => db.SortedSetAddAsync(setId, storedValue, realScore));//SortedSetAdd
         }
         /// <summary>
         /// 
@@ -927,14 +1110,14 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="valueList"></param>
         /// <param name="score"></param>
         /// <returns></returns>
-        public bool SortedSetAddRange<T>(string setId, List<T> valueList, double? score = null)
+        public async Task<bool> SortedSetAddRange<T>(string setId, List<T> valueList, double? score = null)
         {
             if (valueList == null || valueList.Count == 0) return false;
 
             var storedValues = ConvertList(valueList);
             var realScore = score ?? GetLexicalScore(storedValues[0]);
-            var array = storedValues.Select(i => new SortedSetEntry((RedisValue)i, realScore)).ToArray();
-            return Do(db => db.SortedSetAdd(setId, array)) > 0;
+            var array = storedValues.Select(i => new SortedSetEntry(i, realScore)).ToArray();
+            return await Do(db => db.SortedSetAddAsync(setId, array)) > 0;
         }
 
         /// <summary>
@@ -944,9 +1127,9 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="setId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool SortedSetRemove<T>(string setId, T value)
+        public async Task<bool> SortedSetRemove<T>(string setId, T value)
         {
-            return Do(db => db.SortedSetRemove(setId, (RedisValue)ConvertJson(value)));
+            return await Do(db => db.SortedSetRemoveAsync(setId, ConvertJson(value)));
         }
         /// <summary>
         /// 
@@ -954,13 +1137,10 @@ namespace SmartCore.Infrastructure.Redis
         /// <typeparam name="T"></typeparam>
         /// <param name="setId"></param>
         /// <returns></returns>
-        public List<T> SortedSetMembers<T>(string setId)
+        public async Task<List<T>> SortedSetMembers<T>(string setId)
         {
-            return Do(db =>
-            {
-                var values = db.SortedSetRangeByRank(setId);
-                return ConvertList<T>(values);
-            });
+            var values = await Do(db => db.SortedSetRangeByRankAsync(setId));
+            return ConvertList<T>(values);
         }
         /// <summary>
         /// 
@@ -969,14 +1149,11 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="setId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool SortedSetContainsItem<T>(string setId, T value)
+        public async Task<bool> SortedSetContainsItem<T>(string setId, T value)
         {
             var storedValue = ConvertJson(value);
-            return Do(db =>
-            {
-                var values = db.SortedSetRangeByRank(setId).Select(i => i.ToString()).ToList();
-                return values.Contains(storedValue);
-            });
+            var values = await Do(db => db.SortedSetRangeByRankAsync(setId));
+            return values != null ? values.Select(i => i).ToList().Contains(storedValue) : false;
         }
 
         /// <summary>
@@ -986,14 +1163,11 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="setId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public long SortedSetItemIndex<T>(string setId, T value)
+        public async Task<long> SortedSetItemIndex<T>(string setId, T value)
         {
             var storedValue = ConvertJson(value);
-            return Do(db =>
-            {
-                var values = db.SortedSetRangeByRank(setId).Select(i => i.ToString()).ToList();
-                return values.IndexOf(storedValue);
-            });
+            var values = await Do(db => db.SortedSetRangeByRankAsync(setId));
+            return values != null ? values.Select(i => i.ToString()).ToList().IndexOf(storedValue) : 0;
         }
         /// <summary>
         /// 
@@ -1002,21 +1176,20 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="beginRank"></param>
         /// <param name="endRank"></param>
         /// <returns></returns>
-        public List<string> GetRangeFromSortedSet(string set, int beginRank, int endRank)
+        public async Task<List<string>> GetRangeFromSortedSet(string set, int beginRank, int endRank)
         {
-            return Do(db =>
-            {
-                var values = db.SortedSetRangeByRank(set, beginRank, endRank).Select(i => i.ToString()).ToList();
-                return values;
-            });
+            var values = await Do(db => db.SortedSetRangeByRankAsync(set, beginRank, endRank));
+            return values != null ? values.Select(i => i.ToString()).ToList() : new List<string>();
         }
         #endregion
-        /// <summary>
-        /// 查找匹配的redis cache key
-        /// </summary>
-        /// <param name="pattern"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+
+        #region 模糊查找redis key
+        ///// <summary>
+        ///// 查找匹配的redis cache key
+        ///// </summary>
+        ///// <param name="pattern"></param>
+        ///// <param name="pageSize"></param>
+        ///// <returns></returns>
         //public async Task<List<string>> SearchKeys(string pattern, int pageSize = 3000)
         //{
         //    //Task.CompletedTask;
@@ -1047,6 +1220,8 @@ namespace SmartCore.Infrastructure.Redis
         //if (!redisResult.IsNull) {
         //　　_db.KeyDelete((string[]) redisResult);  
         //            }
+        #endregion
+
         #region Dispose
         /// <summary>
         /// 

@@ -12,3 +12,15 @@
 /SmartCore.Repository/bin
 /SmartCore.Models/obj
 /SmartCore.Models/bin
+/Dapper/bin
+/Dapper/obj
+/Dapper.Contrib/bin
+/Dapper.Contrib/obj
+/SmartCore.ConfigCenter.Apollo/bin
+/SmartCore.ConfigCenter.Apollo/obj
+/SmartCore.ConfigCenter.ApolloConfig/bin
+/SmartCore.ConfigCenter.ApolloConfig/obj
+/SmartCore.Consol.Market/bin
+/SmartCore.Consol.Market/obj
+/SmartCore.Consol.UserCenter/bin
+/SmartCore.Consol.UserCenter/obj

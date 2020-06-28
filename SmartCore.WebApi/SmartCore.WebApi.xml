@@ -4,6 +4,11 @@
         <name>SmartCore.WebApi</name>
     </assembly>
     <members>
+        <member name="T:SmartCore.WebApi.AutofacComponent">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:SmartCore.WebApi.AutofacComponent.container">
             <summary>
             
@@ -34,6 +39,17 @@
             
             </summary>
         </member>
+        <member name="T:SmartCore.WebApi.Controllers.HeathController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.HeathController.Status">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SmartCore.WebApi.Controllers.System.BaseDataManmentController">
             <summary>
             
@@ -56,6 +72,22 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SmartCore.WebApi.UsersController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartCore.WebApi.UsersController._userService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.UsersController.#ctor(SmartCore.Services.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
+        </member>
         <member name="T:SmartCore.WebApi.Program">
             <summary>
             
@@ -69,7 +101,7 @@
         </member>
         <member name="M:SmartCore.WebApi.Program.CreateHostBuilder(System.String[])">
              <summary>
-            
+            WebHost ： 承载Web应用的宿主 创建作为应用宿主的WebHost；WebHostBuilder ：WebHost的构建者；
              </summary>
              <param name="args"></param>
              <remark>.NET CORE 内置一个IOC容器 用第三方IOC容器Autofac替代内置的</remark>
@@ -93,22 +125,49 @@
         </member>
         <member name="M:SmartCore.WebApi.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            This method gets called by the runtime. Use this method to add services to the container.
+            This method gets called by the runtime. Use this method to add services to the container. 这个方法为应用程序添加服务
             </summary>
             <param name="services"></param> 
         </member>
-        <member name="M:SmartCore.WebApi.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+        <member name="M:SmartCore.WebApi.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
-            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.配置HTTP请求管道
             </summary>
             <param name="app"></param>
             <param name="env"></param>
+            <param name="loggerFactory">日志工厂</param>
         </member>
         <member name="M:SmartCore.WebApi.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
+             <summary>
+            Autofac IOC设置
+             </summary>
+             <param name="container"></param>
+        </member>
+        <member name="T:Demo.Jwt.Controllers.AuthController">
             <summary>
-            IOC设置
+            
             </summary>
-            <param name="container"></param>
+        </member>
+        <member name="M:Demo.Jwt.Controllers.AuthController.NoPermission">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Demo.Jwt.Controllers.AuthController.GetAuth">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Demo.Jwt.Controllers.AuthController.CheckAccount(System.String,System.String,System.String@)">
+            <summary>
+            模拟登陆校验，因为是模拟，所以逻辑很‘模拟’
+            </summary>
+            <param name="userName"></param>
+            <param name="pwd"></param>
+            <param name="role"></param>
+            <returns></returns>
         </member>
         <member name="T:WebApi.Controllers.AdminController">
             <summary>
@@ -121,10 +180,50 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:WebApi.Controllers.RedisCacheController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.GetRedisValue(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.EnqueueItemOn(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.RedisCacheController.DequeueItem(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WebApi.Controllers.TokenController">
             <summary>
             
             </summary>
+        </member>
+        <member name="F:WebApi.Controllers.TokenController._jwtServices">
+            <summary>
+            Jwt 服务
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.TokenController.#ctor(SmartCore.Services.IJwtServices)">
+            <summary>
+            
+            </summary>
+            <param name="jwtServices"></param>
+        </member>
+        <member name="M:WebApi.Controllers.TokenController.GetRandomToken">
+            <summary>
+            
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

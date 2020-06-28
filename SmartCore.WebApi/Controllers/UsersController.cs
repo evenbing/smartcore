@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-//using WebApi.Services;
-//using WebApi.Models;
-using System.Linq;
-using System.Net.Http;
-
+using SmartCore.Services;
+using System.Threading.Tasks;
+/// <summary>
+/// 
+/// </summary>
 namespace SmartCore.WebApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("[controller]")]
@@ -16,38 +19,44 @@ namespace SmartCore.WebApi
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-       // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
-        [HttpGet]
-        [Route("GetUsersList")]
-        public ActionResult GetUsersList()
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IUserService _userService;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userService"></param>
+        public UsersController(IUserService userService)
         {
-            return Ok(Summaries);
+            _userService = userService;
         }
-    
-        //private IUserService _userService;
-
-        //public UsersController(IUserService userService)
-        //{
-        //    _userService = userService;
-        //}
-
-        //[AllowAnonymous]
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate([FromBody]AuthenticateModel model)
-        //{
-        //    var user = _userService.Authenticate(model.Username, model.Password);
-
-        //    if (user == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-
-        //    return Ok(user);
-        //}
-
+    // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
         //[HttpGet]
-        //public IActionResult GetAll()
+        //[Route("GetUsersList")]
+        //public async Task<IActionResult> GetUsersList()
         //{
-        //    var users = _userService.GetAll();
-        //    return Ok(users);
+        //  var await _userService.SignIn(new UserLoginDTO());
+        //   // var id = _userService;// WebHelper.HttpContext?.TraceIdentifier;
+        //   //// var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync();//获取登录用户的AuthenticateResult
+        //   // if (auth.Succeeded)
+        //   // {
+        //   //     bool IsAuthenticated = HttpContext.User.Identity.IsAuthenticated;
+
+        //    //        var userCli = auth.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        //    //     return Ok(userCli.Value);
+        //    // }
+        //    return Ok(null);
+        //}
+        //[HttpPost]
+        //[Route("SaveUserInfo")]
+        //public async Task<IActionResult> SaveUserInfo([FromBody]User user)
+        //{ 
+            
         //}
     }
 }

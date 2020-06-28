@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConfigurationManager\**" />
+    <EmbeddedResource Remove="ConfigurationManager\**" />
+    <None Remove="ConfigurationManager\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConfigAdapter\IConfigAdapter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ConfigExtensions.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConfigExtensions.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ConfigExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ConfigExtensions.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ConfigExtensions.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConfigExtensions.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

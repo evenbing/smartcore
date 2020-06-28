@@ -9,14 +9,16 @@ namespace SmartCore.Infrastructure.Security
     {
         public static string GetMd5Hash(string source)
         {
-            MD5 md5Hash = MD5.Create();
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(source));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
+            using (var md5Hash = MD5.Create())
             {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-            return sBuilder.ToString();
+                byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(source));
+                StringBuilder sBuilder = new StringBuilder();
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(data[i].ToString("x2"));
+                }
+                return sBuilder.ToString();
+            } 
         }
 
     }

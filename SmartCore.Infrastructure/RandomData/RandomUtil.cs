@@ -112,5 +112,8 @@ namespace SmartCore.Infrastructure.RandomData
             }
             return newRandom.ToString();
         }
+
+         
+             
     }
 }

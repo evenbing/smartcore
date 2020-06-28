@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SmartCore.Models;
 
 namespace SmartCore.Middleware
 {
@@ -36,24 +37,24 @@ namespace SmartCore.Middleware
                     var objectResult = context.Result as ObjectResult;
                     if (objectResult.Value == null)
                     {
-                        context.Result = new OkObjectResult(new { code = 404, message = "未找到资源" });
+                        context.Result = new OkObjectResult(new ApiResultModels { code = 600, message = "未找到资源" });
                     }
                     else
                     {
-                        context.Result = new OkObjectResult(new { code = 200, message = "调用接口成功", data = objectResult.Value });
+                        context.Result = new OkObjectResult(new ApiResultModels { code = 200, message = "操作成功", data = objectResult.Value });
                     }
                 }
                 else if (context.Result is EmptyResult)
                 {
-                    context.Result = new OkObjectResult(new BaseResultModel { code = 404, message = "未找到资源" });
+                    context.Result = new OkObjectResult(new ApiResultModels{ code = 404, message = "未找到资源"});
                 }
                 else if (context.Result is ContentResult)
                 {
-                    context.Result = new OkObjectResult(new { code = 200, message = "调用接口成功", data = (context.Result as ContentResult).Content });
+                    context.Result = new OkObjectResult(new ApiResultModels { code = 200, message = "操作成功", data = (context.Result as ContentResult)?.Content});
                 }
                 else if (context.Result is StatusCodeResult)
                 {
-                    context.Result = new OkObjectResult(new { code = (context.Result as StatusCodeResult).StatusCode, message = ""});
+                    context.Result = new OkObjectResult(new ApiResultModels { code = (context.Result as StatusCodeResult).StatusCode, message = "" });
                 }
             }
         }

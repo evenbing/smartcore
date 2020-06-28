@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
 using System.Data;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using SmartCore.Repository.Sys.Impl;
+using System.Threading;
 
 namespace SmartCore.Repository.Base.Impl
 {
@@ -19,6 +22,7 @@ namespace SmartCore.Repository.Base.Impl
         /// 列名缓存
         /// </summary>
         private static readonly ConcurrentDictionary<string, string> ColumnsCache = new ConcurrentDictionary<string, string>();
+        private static ThreadLocal<DataSourceEnum> _dataSourceEnum = new ThreadLocal<DataSourceEnum>();
         #endregion
 
         #region 属性
@@ -61,6 +65,16 @@ namespace SmartCore.Repository.Base.Impl
             }
             set { _tableName = value; }
         }
+
+        ///// <summary>
+        ///// 当前线程数据源 
+        ///// </summary>
+        ///// <param name="sourceEnum"></param>     
+        //public  DataSourceEnum DataSource
+        //{
+        //    set { _dataSourceEnum.Value = value; }
+        //    get { return _dataSourceEnum.Value; }
+        //}
         #endregion
 
         #region 根据表名获取列名
@@ -200,6 +214,28 @@ namespace SmartCore.Repository.Base.Impl
                 return result;
             }
         }
+        //public async Task<bool> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        //{
+        //    using (var dbConnection = ConnectionFactory.OpenConnection())
+        //    {
+        //        foreach (var property in properties)
+        //        {
+        //            string propertyName = "";
+        //            Expression bodyExpression = property.Body;
+        //            if (bodyExpression.NodeType == ExpressionType.Convert && bodyExpression is UnaryExpression)
+        //            {
+        //                Expression operand = ((UnaryExpression)property.Body).Operand;
+        //                propertyName = ((MemberExpression)operand).Member.Name;
+        //            }
+        //            else
+        //            {
+        //                propertyName = ExpressionHelper.GetExpressionText(property);
+        //            } 
+        //        }
+        //        var result = await dbConnection.UpdateAsync(entity);
+        //        return result;
+        //    }
+        //}
         /// <summary>
         /// 批量更新实体数据
         /// </summary>
@@ -482,6 +518,16 @@ namespace SmartCore.Repository.Base.Impl
         /// <returns></returns>
         public async Task<List<TEntity>> QueryAllList(IDbTransaction transaction = null, int? commandTimeout = null)
         {
+           // Type chindType = this.GetType();//获取子类的类型 
+           //var childAttr = chindType.GetCustomAttributes(typeof(DatatSourceSlaveAttribute), false).FirstOrDefault();
+           // if (childAttr != null)
+           // {
+           //     DataSource = DataSourceEnum.SLAVE;
+           // }
+           // else
+           // {
+           //     DataSource = DataSourceEnum.MASTER;
+           // }
             using (var dbConnection = ConnectionFactory.OpenConnection())
             {
                 var result = await dbConnection.GetAllAsync<TEntity>(transaction, commandTimeout);
@@ -839,5 +885,62 @@ namespace SmartCore.Repository.Base.Impl
             throw new ArgumentException("存储过程为空");
         }
         #endregion
+
+
+        //public static bool DeleteAfterUpdating()
+        //{
+        //    return ExecuteWithTransaction((conn, trans) =>
+        //    {
+        //        var r = conn.Execute(@"update Person set password='www.lanhuseo.com' where id=@id", new { id = 1009 }, trans,
+        //            null, null);
+        //        r += conn.Execute("delete from Person where id=@id", new { id = 1010 }, trans, null, null);
+
+        //        return r;
+        //    });
+        //}
+
+        ///// <summary>
+        /////     Used for query
+        ///// </summary>
+        ///// <param name="action"></param>
+        //public static  ExecuteWithoutTransaction(Action<SqlConnection> action)
+        //{
+        //    UseConnectObj(action);
+        //}
+
+        ///// <summary>
+        /////     Used for cud
+        ///// </summary>
+        ///// <returns>Execute Result</returns>
+        ///// <param name="func"></param>
+        //public  bool ExecuteWithTransaction(Func<SqlConnection, IDbTransaction, int> func)
+        //{
+        //    var r = 0;
+
+        //    UseConnectObj(conn =>
+        //    {
+        //        IDbTransaction trans = conn.BeginTransaction();
+
+        //        r = func(conn, trans);
+
+        //        trans.Commit();
+        //    });
+
+        //    return r > 0;
+        //}
+
+        ///// <summary>
+        /////     Use Action Connection
+        ///// </summary>
+        ///// <param name="action"></param>
+        //public  void UseConnectObj(Action<SqlConnection> action)
+        //{
+        //    using (var conn = new SqlConnection(ConnString))
+        //    {
+        //        conn.Open();
+        //        action(conn);
+        //    }
+        //}
+
     }
 }

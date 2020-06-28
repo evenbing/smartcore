@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SmartCore.Infrastructure.Redis
 {
-   public class RedisConfigs
+   public class RedisConfig
     {
         /// <summary>
         /// 

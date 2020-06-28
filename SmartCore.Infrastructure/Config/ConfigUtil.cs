@@ -15,7 +15,12 @@ namespace SmartCore.Infrastructure.Config
         /// </summary>
         private static IConfiguration configuration;
         static ConfigUtil()
-        {   
+        {
+            //var config = new ConfigurationBuilder()
+            //    .SetBasePath(Directory.GetCurrentDirectory())//设置基础路径
+            //    .AddJsonFile($"appsettings.json", true, true)//加载配置文件
+            //    .AddJsonFile($"appsettings.{EnvironmentName.Development}.json", true, true)
+            //    .Build();
             //在当前目录或者根目录中寻找appsettings.json文件
             var fileName = "appsettings.json";
 

@@ -1,4 +1,5 @@
-﻿using SmartCore.Models.Entity;
+﻿using SmartCore.Infrastructure.Orm;
+using SmartCore.Models.Entity;
 using SmartCore.Repository.Base;
 using SmartCore.Repository.Base.Impl;
 using System;
@@ -7,7 +8,12 @@ using System.Text;
 
 namespace SmartCore.Repository.Sys.Impl
 {
-   public class SysDictRepository: BaseRepository<SysDictEntity>, ISysDictRepository
+    /// <summary>
+    /// 
+    /// </summary>
+
+    [DatatSourceSlave]
+    public class SysDictRepository: BaseRepository<SysDictEntity>, ISysDictRepository
     {
 
     }
