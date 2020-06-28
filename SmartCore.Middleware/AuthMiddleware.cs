@@ -56,20 +56,20 @@ namespace SmartCore.Middleware
                     {
                         if (m != null&& n!=null)
                         {
-                            return  m.FirstOrDefault().Equals(Const.ValidAudience);
-                            //var jwtSecurityToken = n as JwtSecurityToken;
-                            //string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
-                            //string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
-                            //int userKeyId = DigitsUtil.RadixString(userId);
-                            //if (userKeyId>0)
-                            //{
-                            //    string redisKey = $"user:{deviceType}:token:{userKeyId}";
-                            //    string audience = CacheManager.Instance.Get(redisKey).Result;
-                            //    if (!string.IsNullOrEmpty(audience))
-                            //    { 
-                            //        return m.FirstOrDefault().Equals(audience);
-                            //    }
-                            //} 
+                            //return  m.FirstOrDefault().Equals(Const.ValidAudience);
+                            var jwtSecurityToken = n as JwtSecurityToken;
+                            string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
+                            string deviceType = jwtSecurityToken.Payload["unique_name"]?.ToString();
+                            int userKeyId = DigitsUtil.RadixString(userId);
+                            if (userKeyId > 0)
+                            {
+                                string redisKey = $"user:{deviceType}:token:{userKeyId}";
+                                string audience = CacheManager.Instance.Get(redisKey).Result;
+                                if (!string.IsNullOrEmpty(audience))
+                                {
+                                    return m.FirstOrDefault().Equals(audience);
+                                }
+                            }
                         }
                         return false; 
                     }, 

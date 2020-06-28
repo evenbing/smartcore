@@ -32,26 +32,26 @@ namespace SmartCore.Services
         /// <summary>
         /// Http上下文访问器
         /// </summary>
-        public static IHttpContextAccessor HttpContextAccessor { get; set; }
+        public  IHttpContextAccessor HttpContextAccessor { get; set; }
 
         /// <summary>
         /// 当前Http上下文
         /// </summary>
-        public static HttpContext HttpContext => HttpContextAccessor?.HttpContext;
+        public  HttpContext HttpContext => HttpContextAccessor?.HttpContext;
         /// <summary>
         /// 当前Http请求
         /// </summary>
-        public static HttpRequest Request => HttpContext?.Request;
+        public  HttpRequest Request => HttpContext?.Request;
 
         /// <summary>
         /// 当前Http响应
         /// </summary>
-        public static HttpResponse Response => HttpContext?.Response;
+        public  HttpResponse Response => HttpContext?.Response;
 
         /// <summary>
         /// 宿主环境
         /// </summary>
-        public static IWebHostEnvironment Environment { get; set; }
+        public  IWebHostEnvironment Environment { get; set; }
         #endregion
 
         #region AccessToken(获取访问令牌)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NLog;
 using SmartCore.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,8 @@ namespace SmartCore.Middleware
     /// </summary>
     public class ErrorHandlingMiddleware
     {
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        //private static Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// 
         /// </summary>
@@ -21,9 +25,10 @@ namespace SmartCore.Middleware
         /// 
         /// </summary>
         /// <param name="next"></param>
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             this.next = next;
+            _logger = logger;
         }
         /// <summary>
         /// 
@@ -43,7 +48,7 @@ namespace SmartCore.Middleware
                 {
                     statusCode = 200;
                 }
-                await HandleExceptionAsync(context, statusCode, ex.Message);
+                await HandleExceptionAsync(context, statusCode, "", ex);
             }
             finally
             {
@@ -78,11 +83,22 @@ namespace SmartCore.Middleware
         /// <param name="statusCode"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private static Task HandleExceptionAsync(HttpContext context, int statusCode, string message)
+        private Task HandleExceptionAsync(HttpContext context, int statusCode, string message = "", Exception exception = null)
         {
-            string traceId = context?.TraceIdentifier;
-            var data = new ApiResultModels{ code = statusCode, message = message };
-            var result = JsonConvert.SerializeObject(data);
+            ApiResultModels apiResult = new ApiResultModels();
+            apiResult.code = statusCode;
+            if (exception != null)
+            {
+                _logger.LogError(exception.ToString());
+                apiResult.message = "服务器开小差啦...";
+            }
+            else
+            {
+                apiResult.message = message ?? "";
+            }
+            //string traceId = context?.TraceIdentifier;
+            //apiResult.data = traceId;
+            var result = JsonConvert.SerializeObject(apiResult);
             context.Response.ContentType = "application/json;charset=utf-8";
             return context.Response.WriteAsync(result);
         }

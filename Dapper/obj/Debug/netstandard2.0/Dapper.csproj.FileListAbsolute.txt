@@ -1,0 +1,8 @@
+F:\code\donetcore\smartcore\Dapper\bin\Debug\netstandard2.0\Dapper.deps.json
+F:\code\donetcore\smartcore\Dapper\bin\Debug\netstandard2.0\Dapper.dll
+F:\code\donetcore\smartcore\Dapper\bin\Debug\netstandard2.0\Dapper.pdb
+F:\code\donetcore\smartcore\Dapper\obj\Debug\netstandard2.0\Dapper.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\Dapper\obj\Debug\netstandard2.0\Dapper.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\Dapper\obj\Debug\netstandard2.0\Dapper.AssemblyInfo.cs
+F:\code\donetcore\smartcore\Dapper\obj\Debug\netstandard2.0\Dapper.dll
+F:\code\donetcore\smartcore\Dapper\obj\Debug\netstandard2.0\Dapper.pdb

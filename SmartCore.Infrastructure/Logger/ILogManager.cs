@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartCore.Infrastructure.Logger
+namespace SmartCore.Infrastructure
 {
     /// <summary>
     /// 

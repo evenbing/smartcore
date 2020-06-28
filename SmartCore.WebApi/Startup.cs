@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SmartCore.Infrastructure;
 using SmartCore.Infrastructure.Json;
 using SmartCore.Middleware;
@@ -23,6 +25,7 @@ namespace SmartCore.WebApi
     /// </summary>
     public class Startup
     {
+        #region 构造函数 
         /// <summary>
         /// 
         /// </summary>
@@ -31,12 +34,18 @@ namespace SmartCore.WebApi
         {
             Configuration = configuration;
         }
+        #endregion
+        #region 定义依赖注入
         /// <summary>
         /// 
         /// </summary>
         public IConfiguration Configuration { get; }
+
+        //Log记录接口
+        //private readonly ILoggerFactory _loggerFactory;
+        #endregion
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// This method gets called by the runtime. Use this method to add services to the container. 这个方法为应用程序添加服务
         /// </summary>
         /// <param name="services"></param> 
         public void ConfigureServices(IServiceCollection services)
@@ -49,11 +58,12 @@ namespace SmartCore.WebApi
                 options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
                 options.Filters.Add(typeof(ValidateModelAttribute));
                 options.Filters.Add(typeof(WebApiResultMiddleware));
-                options.Filters.Add(typeof(CustomExceptionAttribute));
+                //options.Filters.Add(typeof(CustomExceptionAttribute));
                 options.RespectBrowserAcceptHeader = true;
             }).AddNewtonsoftJson(options =>
             {
                 //默认 JSON 格式化程序基于 System.Text.Json
+                options.SerializerSettings.ReferenceLoopHandling =  ReferenceLoopHandling.Ignore;                //忽略循环引用
                 // Use the default property convert to lower
                 options.SerializerSettings.ContractResolver = new ToLowerPropertyNamesContractResolver();
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
@@ -104,11 +114,12 @@ namespace SmartCore.WebApi
             #endregion 
         }
         /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.配置HTTP请求管道
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="loggerFactory">日志工厂</param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.Use((context, next) =>
             {
@@ -143,17 +154,17 @@ namespace SmartCore.WebApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseErrorHandling();
-           
+            app.UseErrorHandling(); 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
             ServiceProviderInstance.Instance = app.ApplicationServices;
-
+            NLog.LogManager.LoadConfiguration("nlog.config");
+            //NLog.Web.NLogBuilder.ConfigureNLog("LogConfig/nlog.config");//读取Nlog配置文件 
         }
         /// <summary>
-        /// IOC设置
+        ///Autofac IOC设置
         /// </summary>
         /// <param name="container"></param>
         public void ConfigureContainer(ContainerBuilder container)

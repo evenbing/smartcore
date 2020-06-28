@@ -1,0 +1,7 @@
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\bin\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.deps.json
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\bin\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.dll
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\bin\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.pdb
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\obj\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\obj\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\obj\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.dll
+F:\code\donetcore\smartcore\SmartCore.ConfigCenter.Apollo\obj\Debug\netcoreapp3.1\SmartCore.ConfigCenter.Apollo.pdb

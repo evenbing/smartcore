@@ -457,7 +457,7 @@ namespace SmartCore.Infrastructure.Redis
         /// <param name="keys"></param>
         /// <returns></returns>
         public async Task<IDictionary<string, string>> GetAll(IEnumerable<string> keys)
-        {
+        { 
             var result = new Dictionary<string, string>();
             foreach (var key in keys)
             {
@@ -466,8 +466,7 @@ namespace SmartCore.Infrastructure.Redis
                 {
                     result.Add(key, item);
                 }
-            }
-
+            } 
             return result;
         }
         /// <summary>

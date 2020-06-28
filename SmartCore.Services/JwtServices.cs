@@ -2,19 +2,15 @@
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
-using SmartCore.Infrastructure.Config;
-using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt; 
+using SmartCore.Infrastructure.Config; 
 using System.Security.Cryptography;
-using SmartCore.Models.DTO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SmartCore.Models.DTO; 
 using System.Threading.Tasks;
 using SmartCore.Infrastructure;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace SmartCore.Services
 {
@@ -31,16 +27,24 @@ namespace SmartCore.Services
         Task<ClaimsPrincipal> ValidateToken(string token);
         #endregion
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class JwtServices : BaseServices, IJwtServices
-    {
+    { 
+        private JwtConfig tokenSetting = new JwtConfig();
+        private readonly ILogger<JwtServices> _logger;
+        private IConfiguration _configration;
 
-        private string _base64Secret;
-        private JwtConfig tokenSetting = new JwtConfig();//ILogger logger   _logger = logger;ILoggerFactory logger
-
-        private ILoggerFactory _logger;
-        public JwtServices()
+        public JwtServices(ILogger<JwtServices> logger, IConfiguration configuration)
         {
-            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig"); 
+            _configration = configuration;
+            string city = _configration["city"];
+            // Config appConfig = ConfigService.getAppConfig();
+            var jwt = _configration["JwtConfig"];
+            var te = _configration.GetSection("JwtConfig");
+            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
+            _logger = logger;
         }
         /// <summary>
         /// 获取到加密串
@@ -53,7 +57,7 @@ namespace SmartCore.Services
             using (var hmacsha256 = new HMACSHA256(keyByte))
             {
                 byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
-                this._base64Secret = Convert.ToBase64String(hashmessage);
+                //this._base64Secret = Convert.ToBase64String(hashmessage);
             }
         }
         /// <summary>
@@ -69,7 +73,7 @@ namespace SmartCore.Services
             } 
             string userConfoundId = DigitsUtil.ConvertTo62RadixString(userTokenDTO.Id);
             string deviceType = DeviceType;
-            DateTime nowTime = DateTime.UtcNow;
+            DateTime nowTime = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.UtcNow);
             long currentTimeStamp = new DateTimeOffset(nowTime).ToUnixTimeSeconds();
             long expiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.AccessExpiration)).ToUnixTimeSeconds();
             long refreshExpiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.RefreshExpiration)).ToUnixTimeSeconds();
@@ -113,8 +117,9 @@ namespace SmartCore.Services
                 access_token = new AccessToken { token = tokenHandler.WriteToken(token), expired = expiredTimeStamp, expires_in = tokenSetting.AccessExpiration },
                 refresh_token = new AccessToken { token = refreshToken, expired = refreshExpiredTimeStamp, expires_in = tokenSetting.RefreshExpiration }
             };
-           // await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
-            //await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
+            await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
+            await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
+            _logger.LogInformation("生成token成功", token);
             return await Task.FromResult(result);
         }
         /// <summary>

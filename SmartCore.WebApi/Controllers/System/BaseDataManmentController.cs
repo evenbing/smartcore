@@ -35,8 +35,16 @@ namespace SmartCore.WebApi.Controllers.System
         [Route("DicList")]
         [HttpGet]
         public async Task<IActionResult> DicList()
-        { 
-            var list =await _sysDictServices.QueryAllList();
+        {
+            // 声明一个委托实例 
+            //Parallel.For(1, 9999, (id) => 
+            //{
+            //    Action act = async () =>
+            //    {
+            //        await _sysDictServices.QueryAllList();
+            //    };
+            //});
+             var list =await _sysDictServices.QueryAllList();
             return Ok(list); 
         }
     }

@@ -101,7 +101,7 @@
         </member>
         <member name="M:SmartCore.WebApi.Program.CreateHostBuilder(System.String[])">
              <summary>
-            
+            WebHost ： 承载Web应用的宿主 创建作为应用宿主的WebHost；WebHostBuilder ：WebHost的构建者；
              </summary>
              <param name="args"></param>
              <remark>.NET CORE 内置一个IOC容器 用第三方IOC容器Autofac替代内置的</remark>
@@ -125,22 +125,23 @@
         </member>
         <member name="M:SmartCore.WebApi.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            This method gets called by the runtime. Use this method to add services to the container.
+            This method gets called by the runtime. Use this method to add services to the container. 这个方法为应用程序添加服务
             </summary>
             <param name="services"></param> 
         </member>
-        <member name="M:SmartCore.WebApi.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+        <member name="M:SmartCore.WebApi.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
-            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.配置HTTP请求管道
             </summary>
             <param name="app"></param>
             <param name="env"></param>
+            <param name="loggerFactory">日志工厂</param>
         </member>
         <member name="M:SmartCore.WebApi.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
-            <summary>
-            IOC设置
-            </summary>
-            <param name="container"></param>
+             <summary>
+            Autofac IOC设置
+             </summary>
+             <param name="container"></param>
         </member>
         <member name="T:Demo.Jwt.Controllers.AuthController">
             <summary>
