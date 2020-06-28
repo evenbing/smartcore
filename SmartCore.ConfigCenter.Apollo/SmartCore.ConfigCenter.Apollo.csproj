@@ -15,14 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="ConfigExtensions.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ConfigExtensions.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
