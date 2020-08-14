@@ -1,0 +1,12 @@
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.Validator\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+F:\code\donetcore\smartcore\SmartCore.Validator\bin\Debug\netcoreapp3.1\SmartCore.Validator.deps.json
+F:\code\donetcore\smartcore\SmartCore.Validator\bin\Debug\netcoreapp3.1\SmartCore.Validator.dll
+F:\code\donetcore\smartcore\SmartCore.Validator\bin\Debug\netcoreapp3.1\SmartCore.Validator.pdb
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.Validator.StaticWebAssets.Manifest.cache
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.Validator.StaticWebAssets.xml
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.RazorTargetAssemblyInfo.cache
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.dll
+F:\code\donetcore\smartcore\SmartCore.Validator\obj\Debug\netcoreapp3.1\SmartCore.Validator.pdb

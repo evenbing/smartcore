@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SmartCore.WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// 健康检查
     /// </summary>
     [Route("[controller]")]
     [ApiController]

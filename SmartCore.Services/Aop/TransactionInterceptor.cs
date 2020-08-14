@@ -37,7 +37,7 @@ namespace SmartCore.Services.Attributes
                 {
                     TransactionOptions transactionOptions = new TransactionOptions();
                     //设置事务隔离级别
-                    transactionOptions.IsolationLevel = transaction.IsolationLevel;
+                    transactionOptions.IsolationLevel = transaction.IsolationLevel; 
                     //设置事务超时时间为60秒
                     transactionOptions.Timeout = new TimeSpan(0, 0, transaction.Timeout);
                     using (TransactionScope scope = new TransactionScope(transaction.ScopeOption, transactionOptions))

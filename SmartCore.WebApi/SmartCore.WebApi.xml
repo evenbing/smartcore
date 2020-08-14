@@ -34,14 +34,42 @@
             <typeparam name="T">接口类型</typeparam>
             <returns></returns>
         </member>
-        <member name="T:SmartCore.WebApi.BaseApiController">
+        <member name="T:SmartCore.WebApi.Controllers.AuthController">
             <summary>
             
             </summary>
         </member>
-        <member name="T:SmartCore.WebApi.Controllers.HeathController">
+        <member name="M:SmartCore.WebApi.Controllers.AuthController.NoPermission">
             <summary>
             
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.AuthController.GetAuth">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.AuthController.CheckAccount(System.String,System.String,System.String@)">
+            <summary>
+            模拟登陆校验，因为是模拟，所以逻辑很‘模拟’
+            </summary>
+            <param name="userName"></param>
+            <param name="pwd"></param>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.FileUploadController.FormSingleFileUpload(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Form表单之单文件上传
+            </summary>
+            <param name="formFile">form表单文件流信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartCore.WebApi.Controllers.HeathController">
+            <summary>
+            健康检查
             </summary>
         </member>
         <member name="M:SmartCore.WebApi.Controllers.HeathController.Status">
@@ -72,6 +100,33 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SmartCore.WebApi.Controllers.TokenController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartCore.WebApi.Controllers.TokenController._jwtServices">
+            <summary>
+            Jwt 服务
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.TokenController.#ctor(SmartCore.Services.IJwtServices)">
+            <summary>
+            
+            </summary>
+            <param name="jwtServices"></param>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.TokenController.GetRandomToken">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartCore.WebApi.BaseApiController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:SmartCore.WebApi.UsersController">
             <summary>
             
@@ -87,6 +142,12 @@
             
             </summary>
             <param name="userService"></param>
+        </member>
+        <member name="M:SmartCore.WebApi.UsersController.ChangPassword">
+            <summary>
+            
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:SmartCore.WebApi.Program">
             <summary>
@@ -142,32 +203,27 @@
             Autofac IOC设置
              </summary>
              <param name="container"></param>
-        </member>
-        <member name="T:Demo.Jwt.Controllers.AuthController">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Demo.Jwt.Controllers.AuthController.NoPermission">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Demo.Jwt.Controllers.AuthController.GetAuth">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Demo.Jwt.Controllers.AuthController.CheckAccount(System.String,System.String,System.String@)">
-            <summary>
-            模拟登陆校验，因为是模拟，所以逻辑很‘模拟’
-            </summary>
-            <param name="userName"></param>
-            <param name="pwd"></param>
-            <param name="role"></param>
-            <returns></returns>
+             <remarks>
+             1.依赖注入的目的是为了解耦。
+            2.不依赖于具体类，而依赖抽象类或者接口，这叫依赖倒置。
+            3.控制反转即IoC(Inversion of Control)，它把传统上由程序代码直接操控的对象的调用权交给容器，通过容器来实现对象组件的装配和管理。所谓的“控制反转”概念就是对组件对象控制权的转移，从程序代码本身转移到了外部容器。
+            Autofac创建类的生命周期
+             1、InstancePerDependency 
+            对每一个依赖或每一次调用创建一个新的唯一的实例。这也是默认的创建实例的方式。
+            官方文档解释：Configure the component so that every dependent component or call to Resolve() gets a new, unique instance(default.)
+            2、InstancePerLifetimeScope
+            在一个生命周期域中，每一个依赖或调用创建一个单一的共享的实例，且每一个不同的生命周期域，实例是唯一的，不共享的。
+            官方文档解释：Configure the component so that every dependent component or call to Resolve() within a single ILifetimeScope gets the same, shared instance.Dependent components in different lifetime scopes will get different instances.
+            3、InstancePerMatchingLifetimeScope
+            在一个做标识的生命周期域中，每一个依赖或调用创建一个单一的共享的实例。打了标识了的生命周期域中的子标识域中可以共享父级域中的实例。若在整个继承层次中没有找到打标识的生命周期域，则会抛出异常：DependencyResolutionException。
+            官方文档解释：Configure the component so that every dependent component or call to Resolve() within a ILifetimeScope tagged with any of the provided tags value gets the same, shared instance. Dependent components in lifetime scopes that are children of the tagged scope will share the parent's instance. If no appropriately tagged scope can be found in the hierarchy an DependencyResolutionException is thrown. 
+            4、InstancePerOwned 
+            在一个生命周期域中所拥有的实例创建的生命周期中，每一个依赖组件或调用Resolve() 方法创建一个单一的共享的实例，并且子生命周期域共享父生命周期域中的实例。若在继承层级中没有发现合适的拥有子实例的生命周期域，则抛出异常：DependencyResolutionException。
+            官方文档解释：Configure the component so that every dependent component or call to Resolve() within a ILifetimeScope created by an owned instance gets the same, shared instance. Dependent components in lifetime scopes that are children of the owned instance scope will share the parent's instance. If no appropriate owned instance scope can be found in the hierarchy an DependencyResolutionException is thrown. 
+            5、SingleInstance
+            每一次依赖组件或调用Resolve() 方法都会得到一个相同的共享的实例。其实就是单例模式。
+            官方文档解释：Configure the component so that every dependent component or call to Resolve() gets the same, shared instance. 
+             </remarks>
         </member>
         <member name="T:WebApi.Controllers.AdminController">
             <summary>
@@ -198,28 +254,6 @@
             <returns></returns>
         </member>
         <member name="M:WebApi.Controllers.RedisCacheController.DequeueItem(System.String)">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:WebApi.Controllers.TokenController">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:WebApi.Controllers.TokenController._jwtServices">
-            <summary>
-            Jwt 服务
-            </summary>
-        </member>
-        <member name="M:WebApi.Controllers.TokenController.#ctor(SmartCore.Services.IJwtServices)">
-            <summary>
-            
-            </summary>
-            <param name="jwtServices"></param>
-        </member>
-        <member name="M:WebApi.Controllers.TokenController.GetRandomToken">
             <summary>
             
             </summary>

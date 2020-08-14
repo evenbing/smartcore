@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Demo.Jwt.Controllers
+namespace SmartCore.WebApi.Controllers
 {
     /// <summary>
     /// 
@@ -14,6 +14,19 @@ namespace Demo.Jwt.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        #region 用户登录
+        #endregion
+
+        #region 用户退出登录
+        #endregion
+
+        #region 获取登录验证码
+        public async Task<IActionResult> GetVerifyCode() {
+            return Ok();
+        }
+        #endregion
+
+        #region 测试
         /// <summary>
         /// 
         /// </summary>
@@ -24,7 +37,7 @@ namespace Demo.Jwt.Controllers
         public IActionResult NoPermission()
         {
             return Forbid("No Permission!");
-        } 
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -36,7 +49,7 @@ namespace Demo.Jwt.Controllers
         {
             //这是获取自定义参数的方法
             var auth = await HttpContext.AuthenticateAsync();
-             var claims = auth.Principal.Claims;
+            var claims = auth.Principal.Claims;
             var userName = claims.FirstOrDefault(t => t.Type.Equals(ClaimTypes.NameIdentifier))?.Value;
             var role = claims.FirstOrDefault(t => t.Type.Equals("Role"))?.Value;
             return Ok(new string[] { "这个接口有管理员权限才可以访问", $"userName={userName}", $"Role={role}" });
@@ -60,5 +73,6 @@ namespace Demo.Jwt.Controllers
 
             return true;
         }
+        #endregion
     }
 }

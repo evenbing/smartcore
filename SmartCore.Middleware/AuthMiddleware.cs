@@ -155,9 +155,10 @@ namespace SmartCore.Middleware
 
                 };
             });
-
             return services;
         }
+
+       
     }
      
 }

@@ -1,0 +1,52 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "SmartCore.FastDFS/1.0.0": {
+        "dependencies": {
+          "FastDFSNetCore": "1.2.5"
+        },
+        "runtime": {
+          "SmartCore.FastDFS.dll": {}
+        }
+      },
+      "FastDFSNetCore/1.2.5": {
+        "dependencies": {
+          "System.Memory": "4.5.2"
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/FastDFS.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
+      "System.Memory/4.5.2": {}
+    }
+  },
+  "libraries": {
+    "SmartCore.FastDFS/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FastDFSNetCore/1.2.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4z3M6EkFM42laNh7x9+1hWafOJ1uPcV5K5cG0cJxOzOELz/HOEvTwgQ2d0zrar2dKzaZ6iFBQhfjQlkuEC5Kjw==",
+      "path": "fastdfsnetcore/1.2.5",
+      "hashPath": "fastdfsnetcore.1.2.5.nupkg.sha512"
+    },
+    "System.Memory/4.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fvq1GNmUFwbKv+aLVYYdgu/+gc8Nu9oFujOxIjPrsf+meis9JBzTPDL6aP/eeGOz9yPj6rRLUbOjKMpsMEWpNg==",
+      "path": "system.memory/4.5.2",
+      "hashPath": "system.memory.4.5.2.nupkg.sha512"
+    }
+  }
+}

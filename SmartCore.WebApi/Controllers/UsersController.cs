@@ -19,6 +19,7 @@ namespace SmartCore.WebApi
          {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        #region 构造函数
         /// <summary>
         /// 
         /// </summary>
@@ -31,7 +32,19 @@ namespace SmartCore.WebApi
         {
             _userService = userService;
         }
-    // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
+        #endregion
+        #region 修改密码
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ChangPassword()
+        {
+            return Ok();
+        }
+        #endregion
+        #region 测试
+        // private readonly IHttpClientFactory _clientFactory;IHttpClientFactory _clientFactory
         ///// <summary>
         ///// 
         ///// </summary>
@@ -56,7 +69,8 @@ namespace SmartCore.WebApi
         //[Route("SaveUserInfo")]
         //public async Task<IActionResult> SaveUserInfo([FromBody]User user)
         //{ 
-            
+
         //}
+        #endregion
     }
 }

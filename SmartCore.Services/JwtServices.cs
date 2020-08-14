@@ -63,7 +63,7 @@ namespace SmartCore.Services
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="userTokenDTO"></param>
         /// <returns></returns>
         public async Task<JwtAuthorizationDTO> GenerateSecurityToken(UserTokenDTO userTokenDTO)
         {
@@ -73,7 +73,7 @@ namespace SmartCore.Services
             } 
             string userConfoundId = DigitsUtil.ConvertTo62RadixString(userTokenDTO.Id);
             string deviceType = DeviceType;
-            DateTime nowTime = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.UtcNow);
+            DateTime nowTime = DateTime.UtcNow.ToLocalTime();
             long currentTimeStamp = new DateTimeOffset(nowTime).ToUnixTimeSeconds();
             long expiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.AccessExpiration)).ToUnixTimeSeconds();
             long refreshExpiredTimeStamp = new DateTimeOffset(nowTime.AddMinutes(tokenSetting.RefreshExpiration)).ToUnixTimeSeconds();
@@ -117,8 +117,8 @@ namespace SmartCore.Services
                 access_token = new AccessToken { token = tokenHandler.WriteToken(token), expired = expiredTimeStamp, expires_in = tokenSetting.AccessExpiration },
                 refresh_token = new AccessToken { token = refreshToken, expired = refreshExpiredTimeStamp, expires_in = tokenSetting.RefreshExpiration }
             };
-            await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
-            await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
+            //await CacheManager.Instance.Set($"user:{deviceType}:token:{userTokenDTO.Id}", redisValue, expiresTime);
+            //await CacheManager.Instance.Set($"user:{deviceType}:refresh_token:{refreshToken}", result.access_token.token, refreshExpiredTimeStamp);
             _logger.LogInformation("生成token成功", token);
             return await Task.FromResult(result);
         }
@@ -146,7 +146,7 @@ namespace SmartCore.Services
                     //这里采用动态验证的方式，在退出、修改密码、重新登陆等动作时，刷新token，旧token就强制失效了 也可以用常量的形式，ValidAudience = tokenSetting.Audience,
                     AudienceValidator = (m, n, z) =>
                     {
-                        if (n != null)
+                        if (m!=null&&n != null)
                         {
                             var jwtSecurityToken = n as JwtSecurityToken;
                             string userId = jwtSecurityToken.Payload["nameid"]?.ToString();
@@ -172,6 +172,7 @@ namespace SmartCore.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "ValidateToken");
                 return null;
             }
         }
