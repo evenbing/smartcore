@@ -1,0 +1,8 @@
+F:\code\donetcore\smartcore\SmartCore.FastDFS\bin\Debug\netcoreapp3.1\SmartCore.FastDFS.deps.json
+F:\code\donetcore\smartcore\SmartCore.FastDFS\bin\Debug\netcoreapp3.1\SmartCore.FastDFS.dll
+F:\code\donetcore\smartcore\SmartCore.FastDFS\bin\Debug\netcoreapp3.1\SmartCore.FastDFS.pdb
+F:\code\donetcore\smartcore\SmartCore.FastDFS\obj\Debug\netcoreapp3.1\SmartCore.FastDFS.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.FastDFS\obj\Debug\netcoreapp3.1\SmartCore.FastDFS.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.FastDFS\obj\Debug\netcoreapp3.1\SmartCore.FastDFS.dll
+F:\code\donetcore\smartcore\SmartCore.FastDFS\obj\Debug\netcoreapp3.1\SmartCore.FastDFS.pdb
+F:\code\donetcore\smartcore\SmartCore.FastDFS\obj\Debug\netcoreapp3.1\SmartCore.FastDFS.csprojAssemblyReference.cache

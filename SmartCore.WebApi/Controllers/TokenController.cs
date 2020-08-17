@@ -7,7 +7,7 @@ using SmartCore.Services;
 using SmartCore.WebApi;
 using System.Threading.Tasks;
 
-namespace WebApi.Controllers
+namespace SmartCore.WebApi.Controllers
 {
     /// <summary>
     /// 

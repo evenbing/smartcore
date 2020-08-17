@@ -1,4 +1,5 @@
-﻿using SmartCore.Models.Entity;
+﻿using SmartCore.Models.DTO;
+using SmartCore.Models.Entity;
 using SmartCore.Repository.Base;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace SmartCore.Repository.User
 {
-   public interface IUserRepository : IBaseRepository<Models.Entity.UserEntity>
+   public interface IUserRepository : IBaseRepository<Models.Entity.UserAccountEntity>
     {
-        Task<UserEntity> CheckUser(string loginName);
+        Task<UserAccountEntity> CheckUser(string userName);
     }
 }

@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -27,7 +29,7 @@ namespace SmartCore.WebApi
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            SmartCore.Infrastructure.LogManager.Info("Current Thead Id:{0}", Thread.CurrentThread.ManagedThreadId);
+           // SmartCore.Infrastructure.LogManager.Info("Current Thead Id:{0}", Thread.CurrentThread.ManagedThreadId);
             //logger.Info(string.Format("Current Thead Id:{0}", Thread.CurrentThread.ManagedThreadId));
             CreateHostBuilder(args).Build().Run();
         }
@@ -44,66 +46,46 @@ namespace SmartCore.WebApi
                     var env = hostingContext.HostingEnvironment;
                     //加载appsettings.json文件 使用模板创建的项目，会生成一个配置文件，配置文件中包含Logging的配置项
                     builder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                    .AddApollo(builder.Build().GetSection("apollo"))
-                    .AddDefault();//默认 namespace: application
-
+                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    //默认 namespace: application
+                    // .AddApollo(builder.Build().GetSection("apollo"))
+                    //.AddDefault()
                     //ApolloConfig.Configuration = builder.Build();
                 })
             .ConfigureWebHostDefaults(webBuilder =>
             {
                     webBuilder.UseStartup<Startup>().UseNLog();
             }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
-        #region 添加阿波罗配置
-        //  .ConfigureAppConfiguration((hostingContext, builder) =>
-        //    {
-        //    //builder.SetBasePath(Directory.GetCurrentDirectory())
-        //    //.AddJsonFile(
-        //    //    hostingContext.HostingEnvironment.IsProduction()
-        //    //        ? "appsettings.Production.json"
-        //    //        : "appsettings.Development.json", true, true)
-        //    var env = hostingContext.HostingEnvironment;
-        //    //加载appsettings.json文件 使用模板创建的项目，会生成一个配置文件，配置文件中包含Logging的配置项
-        //    builder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-        //    //.AddApollo(builder.Build().GetSection("apollo"))
-        //    //.AddDefault();
 
-        //    //ApolloConfig.Configuration = builder.Build();
-        //})
-        #endregion
-
-        //   .ConfigureLogging((hostingContext, logging) =>
-        //    {
-        //    logging.AddDebug();
-        //})
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="hostBuilder"></param>
-        ///// <param name="startupType"></param>
-        ///// <returns></returns>
-        //public static IWebHostBuilder UseStartup(this IWebHostBuilder hostBuilder, Type startupType)
-        //{
-        //    var startupAssemblyName = startupType.GetTypeInfo().Assembly.GetName().Name;
-
-        //    return hostBuilder
-        //        .UseSetting(WebHostDefaults.ApplicationKey, startupAssemblyName)
-        //        .ConfigureServices(services =>
-        //        {
-        //            if (typeof(IStartup).GetTypeInfo().IsAssignableFrom(startupType.GetTypeInfo()))
+        //.UseKestrel(options =>
         //            {
-        //                services.AddSingleton(typeof(IStartup), startupType);
-        //            }
-        //            else
-        //            {
-        //                services.AddSingleton(typeof(IStartup), sp =>
-        //                {
-        //                    var hostingEnvironment = sp.GetRequiredService<IHostingEnvironment>();
-        //                    return new ConventionBasedStartup(StartupLoader.LoadMethods(sp, startupType, hostingEnvironment.EnvironmentName));
-        //                });
-        //            }
-        //        });
-        //}
+        //    //options.ListenUnixSocket("/tmp/kestrel-server.sock");
+        //    //options.ListenUnixSocket("/tmp/kestrel-test.sock", listenOptions =>
+        //    //{
+        //    //    listenOptions.UseHttps("testCert.pfx", "testpassword");
+        //    //}); 
+        //    // Set properties and call methods on options
+        //    //为整个应用设置并发打开的最大 TCP 连接数,默认情况下，最大连接数不受限制 (NULL)
+        //    //options.Limits.MaxConcurrentConnections = 100;
+        //    //对于已从 HTTP 或 HTTPS 升级到另一个协议（例如，Websocket 请求）的连接，有一个单独的限制。 连接升级后，不会计入 MaxConcurrentConnections 限制
+        //    //options.Limits.MaxConcurrentUpgradedConnections = 100;
+        //    //最大请求体大小Maximum request body size 缺省值为30,000,000byte, 大约是28.6MB。
+        //    options.Limits.MaxRequestBodySize = 10 * 1024;
+        //    //最小请求提数据率Minimum request body data rate 缺省值为30 to 240 bytes/second with a 5 second grace period. https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits.minrequestbodydatarate?view=aspnetcore-2.1
+        //    options.Limits.MinRequestBodyDataRate = null;//赋值null 为了解决大概并发在 50 个时会发生Reading the request body timed out due to data arriving too slowly. See MinRequestBodyDataRate这个异常
+        //                                                 //new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+        //    options.Limits.MinResponseDataRate =
+        //        new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+        //    //获取或设置保持活动状态超时。 
+        //    //option.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(20);
+        //    //option.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(20);
+        //    //options.Listen(IPAddress.Loopback, 5000);
+        //    //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+        //    //{
+        //    //    listenOptions.UseHttps("testCert.pfx", "testPassword");
+        //    //});
+
+        //})
+
     }
 }

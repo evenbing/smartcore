@@ -63,5 +63,7 @@ namespace SmartCore.Infrastructure
         /// 隐藏中间3位
         /// </summary>
         public static string MachineNameWithHide => !string.IsNullOrEmpty(MachineName)? StringUtil.ReplaceWithSpecialChar(MachineName,2, 5,'*') :"";
+
+   
     }
 }

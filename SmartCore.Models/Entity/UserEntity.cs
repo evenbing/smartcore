@@ -4,9 +4,9 @@ using Dapper.Contrib.Extensions;
 namespace SmartCore.Models.Entity
 {
     [Table(TableName)]
-    public class UserEntity
+    public class UserAccountEntity
     {
-        public const string TableName = "User";
+        public const string TableName = "UserAccount";
         /// <summary>
         /// 
         /// </summary>

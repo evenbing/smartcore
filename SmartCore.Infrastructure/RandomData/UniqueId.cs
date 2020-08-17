@@ -5,6 +5,8 @@ using System.Threading;
 
 namespace SmartCore.Infrastructure.RandomData
 {
+    //private static readonly IUniqueIdParser Parser = new UniqueIdParser();
+
     public static class UniqueId
     {
         private static long _sequence = DateTime.Now.Ticks;

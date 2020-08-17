@@ -46,6 +46,7 @@ namespace SmartCore.Consol.UserCenter
 
             var consulOption = new ConsulOption
             {
+                
                 ServiceName = Configuration["ServiceName"],
                 ServiceIP = Configuration["ServiceIP"],
                 ServicePort = Convert.ToInt32(Configuration["ServicePort"]),

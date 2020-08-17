@@ -1,0 +1,5 @@
+F:\code\donetcore\smartcore\SmartCore.ElasticSearch\bin\Debug\netcoreapp3.1\SmartCore.ElasticSearch.deps.json
+F:\code\donetcore\smartcore\SmartCore.ElasticSearch\bin\Debug\netcoreapp3.1\SmartCore.ElasticSearch.dll
+F:\code\donetcore\smartcore\SmartCore.ElasticSearch\obj\Debug\netcoreapp3.1\SmartCore.ElasticSearch.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.ElasticSearch\obj\Debug\netcoreapp3.1\SmartCore.ElasticSearch.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.ElasticSearch\obj\Debug\netcoreapp3.1\SmartCore.ElasticSearch.AssemblyInfo.cs
