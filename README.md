@@ -13,5 +13,8 @@ technology stack
 
 6.Mongodb
 
+7.AutoMapper
+
+8.FileStorge
 ## 架构预览
 
