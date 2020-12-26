@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SmartCore.Services
 {
-    public class JwtConfig
+    public class JwtIssuerOptions
     {
-        //[JsonProperty("secret")]
         /// <summary>
         /// 
         /// </summary>
@@ -27,5 +27,21 @@ namespace SmartCore.Services
         /// 
         /// </summary>
         public int RefreshExpiration { get; set; }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public string Subject { get; set; }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public DateTime NotBefore => DateTime.UtcNow;
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public DateTime IssueAt => DateTime.UtcNow;
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public Func<Task<string>> JtiGenerator => () => Task.FromResult(Guid.NewGuid().ToString());
     }
 }

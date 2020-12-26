@@ -36,8 +36,20 @@
         </member>
         <member name="T:SmartCore.WebApi.Controllers.AuthController">
             <summary>
-            
+            认证及会话
             </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.AuthController.Logout">
+            <summary>
+            用户退出登录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.AuthController.GetVerifyCode">
+            <summary>
+            获取登录验证码
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:SmartCore.WebApi.Controllers.AuthController.NoPermission">
             <summary>
@@ -60,6 +72,16 @@
             <param name="role"></param>
             <returns></returns>
         </member>
+        <member name="T:SmartCore.WebApi.Controllers.FileUploadController">
+            <summary>
+            附件上传
+            </summary>
+        </member>
+        <member name="M:SmartCore.WebApi.Controllers.FileUploadController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:SmartCore.WebApi.Controllers.FileUploadController.FormSingleFileUpload(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             Form表单之单文件上传
@@ -80,7 +102,7 @@
         </member>
         <member name="T:SmartCore.WebApi.Controllers.System.BaseDataManmentController">
             <summary>
-            
+            基础数据
             </summary>
         </member>
         <member name="F:SmartCore.WebApi.Controllers.System.BaseDataManmentController._sysDictServices">
@@ -96,13 +118,13 @@
         </member>
         <member name="M:SmartCore.WebApi.Controllers.System.BaseDataManmentController.DicList">
             <summary>
-            
+            获取数据字典列表
             </summary>
             <returns></returns>
         </member>
         <member name="T:SmartCore.WebApi.Controllers.TokenController">
             <summary>
-            
+            令牌
             </summary>
         </member>
         <member name="F:SmartCore.WebApi.Controllers.TokenController._jwtServices">
@@ -129,7 +151,7 @@
         </member>
         <member name="T:SmartCore.WebApi.UsersController">
             <summary>
-            
+            用户信息
             </summary>
         </member>
         <member name="F:SmartCore.WebApi.UsersController._userService">
@@ -137,13 +159,19 @@
             
             </summary>
         </member>
-        <member name="M:SmartCore.WebApi.UsersController.#ctor(SmartCore.Services.IUserService)">
+        <member name="M:SmartCore.WebApi.UsersController.#ctor(SmartCore.Services.User.IUserService)">
             <summary>
             
             </summary>
             <param name="userService"></param>
         </member>
-        <member name="M:SmartCore.WebApi.UsersController.ChangPassword">
+        <member name="M:SmartCore.WebApi.UsersController.Sign(SmartCore.Models.DTO.UserLoginDTO)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartCore.WebApi.UsersController.ChangPassword(SmartCore.Models.DTO.UserLoginDTO)">
             <summary>
             
             </summary>
@@ -225,6 +253,11 @@
             官方文档解释：Configure the component so that every dependent component or call to Resolve() gets the same, shared instance. 
              </remarks>
         </member>
+        <member name="P:SmartCore.WebApi.Startup.AutofacContainer">
+            <summary>
+            添加这个 是为了生成一个 容器 在别的地方使用
+            </summary>
+        </member>
         <member name="T:WebApi.Controllers.AdminController">
             <summary>
             
@@ -238,7 +271,7 @@
         </member>
         <member name="T:WebApi.Controllers.RedisCacheController">
             <summary>
-            
+            缓存操作
             </summary>
         </member>
         <member name="M:WebApi.Controllers.RedisCacheController.GetRedisValue(System.String)">

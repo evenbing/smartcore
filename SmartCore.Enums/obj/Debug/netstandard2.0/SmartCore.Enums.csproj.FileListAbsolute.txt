@@ -1,0 +1,7 @@
+F:\code\donetcore\smartcore\SmartCore.Enums\bin\Debug\netstandard2.0\SmartCore.Enums.deps.json
+F:\code\donetcore\smartcore\SmartCore.Enums\bin\Debug\netstandard2.0\SmartCore.Enums.dll
+F:\code\donetcore\smartcore\SmartCore.Enums\bin\Debug\netstandard2.0\SmartCore.Enums.pdb
+F:\code\donetcore\smartcore\SmartCore.Enums\obj\Debug\netstandard2.0\SmartCore.Enums.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Enums\obj\Debug\netstandard2.0\SmartCore.Enums.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.Enums\obj\Debug\netstandard2.0\SmartCore.Enums.dll
+F:\code\donetcore\smartcore\SmartCore.Enums\obj\Debug\netstandard2.0\SmartCore.Enums.pdb

@@ -13,7 +13,7 @@ namespace SmartCore.Services
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                        PermissionRequirement requirement)
         {
-           var tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
+           var tokenSetting = ConfigUtil.GetAppSettings<JwtIssuerOptions>("JwtConfig");
             List<PermissionRequirement> requirements = new List<PermissionRequirement>();
             foreach (var item in context.Requirements)
             {

@@ -20,7 +20,7 @@ namespace SmartCore.Repository.User
             //根据用户名或手机号或者邮件登录
             string sql = @"SELECT TOP 1 [Id],[UserName],[UserEmail]
       ,[NickName],[RealName],[Letter],[EmpId],[Phone],[Avatar]
-      ,[Birthday],[Sex],[OrgCode],[Status],[IsEnabled],[ThirdId] FROM UserAccountEntity WHERE UserName=@UserName OR UserEmail=@UserName OR  Phone=@UserName";
+      ,[Birthday],[Sex],[OrgCode],[Status],[IsEnabled],[ThirdId] FROM UserAccount WHERE UserName=@UserName OR UserEmail=@UserName OR  Phone=@UserName";
             return await Get<UserAccountEntity>(sql, new { UserName = userName }); 
         }
     }

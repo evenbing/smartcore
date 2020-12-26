@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SmartCore.WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// 令牌
     /// </summary>
     [Route("[controller]")]
     [ApiController]

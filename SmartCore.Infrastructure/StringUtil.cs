@@ -7,7 +7,7 @@ namespace SmartCore.Infrastructure
     /// <summary>
     /// 
     /// </summary>
-   public class StringUtil
+    public class StringUtil
     {
         /// <summary>
         /// 将传入的字符串中间部分字符替换成特殊字符
@@ -41,5 +41,46 @@ namespace SmartCore.Infrastructure
 
             return value;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string HashByteToString(byte[] data)
+        {
+            StringBuilder sBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("X2"));
+            }
+            return sBuilder.ToString();
+        }
+        #region 让单词首字母大写
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetTitleCaseLetter(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "";
+            }
+            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(value);
+        }
+        #endregion
+        /// <summary>
+        /// 翻转一个字符串
+        /// </summary>
+        /// <param name="inputString">目标字符串</param>
+        /// <returns>翻转后的字符串</returns>
+        public static string ReverseStr(string inputString)
+        {
+            char[] c = inputString.ToCharArray();
+            System.Array.Reverse(c);
+            return new string(c);
+        }
+
     }
 }

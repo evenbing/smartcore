@@ -1,0 +1,17 @@
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\appsettings.Development.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\appsettings.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.exe
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.deps.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.runtimeconfig.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.runtimeconfig.dev.json
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.dll
+F:\code\donetcore\smartcore\SmartCore.AuthServer\bin\Debug\netcoreapp3.1\SmartCore.AuthServer.pdb
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.AuthServer.StaticWebAssets.Manifest.cache
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.AuthServer.StaticWebAssets.xml
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.MvcApplicationPartsAssemblyInfo.cache
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.AssemblyInfo.cs
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.RazorTargetAssemblyInfo.cache
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.dll
+F:\code\donetcore\smartcore\SmartCore.AuthServer\obj\Debug\netcoreapp3.1\SmartCore.AuthServer.pdb

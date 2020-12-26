@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Autofac;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -14,6 +15,7 @@ using SmartCore.Infrastructure;
 using SmartCore.Infrastructure.Json;
 using SmartCore.Middleware;
 using SmartCore.Middleware.MiddlewareExtension;
+using SmartCore.Middleware.Providers;
 using SmartCore.Repository.Base;
 using SmartCore.Repository.Base.Impl;
 using SmartCore.Services;
@@ -68,6 +70,7 @@ namespace SmartCore.WebApi
                 options.SerializerSettings.ContractResolver = new ToLowerPropertyNamesContractResolver();
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
+            services.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>();
 
             #region Authentication
             services.AddTokenAuthentication();
@@ -132,7 +135,7 @@ namespace SmartCore.WebApi
             app.Use((context, next) =>
             {
                 //Do some work here System.Environment.MachineName
-                context.Response.Headers.Add("X-SererName", Common.MachineNameWithHide);
+                context.Response.Headers.Add("X-ServerName", Common.MachineNameWithHide);
                 context.Response.Headers.Add("X-Correlation-ID", context?.TraceIdentifier);
                 //Pass the request on down to the next pipeline (Which is the MVC middleware)
                 return next();
@@ -210,5 +213,10 @@ namespace SmartCore.WebApi
             container.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IBaseRepository<>)).InstancePerDependency();
             //container.RegisterType<JwtServices>().As<IJwtServices>().AsImplementedInterfaces();
         }
+         
+        /// <summary>
+        /// 添加这个 是为了生成一个 容器 在别的地方使用
+        /// </summary>
+        public ILifetimeScope AutofacContainer { get; private set; }
     }
 }

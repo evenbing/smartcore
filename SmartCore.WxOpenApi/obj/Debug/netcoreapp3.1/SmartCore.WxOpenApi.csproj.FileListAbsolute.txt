@@ -7,7 +7,6 @@ F:\code\donetcore\smartcore\SmartCore.WxOpenApi\bin\Debug\netcoreapp3.1\SmartCor
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\bin\Debug\netcoreapp3.1\SmartCore.WxOpenApi.runtimeconfig.dev.json
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\bin\Debug\netcoreapp3.1\SmartCore.WxOpenApi.dll
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\bin\Debug\netcoreapp3.1\SmartCore.WxOpenApi.pdb
-F:\code\donetcore\smartcore\SmartCore.WxOpenApi\obj\Debug\netcoreapp3.1\SmartCore.WxOpenApi.csprojAssemblyReference.cache
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.WxOpenApi.StaticWebAssets.Manifest.cache
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.WxOpenApi.StaticWebAssets.xml
 F:\code\donetcore\smartcore\SmartCore.WxOpenApi\obj\Debug\netcoreapp3.1\SmartCore.WxOpenApi.MvcApplicationPartsAssemblyInfo.cache

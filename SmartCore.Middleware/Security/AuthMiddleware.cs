@@ -22,7 +22,7 @@ namespace SmartCore.Middleware
     {
         public static IServiceCollection AddTokenAuthentication(this IServiceCollection services)
         { 
-            var tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
+            var tokenSetting = ConfigUtil.GetAppSettings<JwtIssuerOptions>("JwtConfig");
             var key = Encoding.UTF8.GetBytes(tokenSetting.Secret);
             //添加基于策略授权的方法
             //验证授权模式是否为jwt bearer
@@ -34,6 +34,8 @@ namespace SmartCore.Middleware
             })
             .AddJwtBearer(x =>
             {
+                //openidconnect calls  认证地址
+                //x.Authority = "https://oidc.faasx.com/";
                 //获取权限是否需要HTTPS 
                 x.RequireHttpsMetadata = false; 
                 //x.SecurityTokenValidators.Clear();
@@ -43,7 +45,9 @@ namespace SmartCore.Middleware
                 //Jwt bearer token 信息验证
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateActor=true,
+                    //NameClaimType = JwtClaimTypes.Name,
+                    //RoleClaimType = JwtClaimTypes.Role,
+                    ValidateActor =true,
                     ValidateLifetime = true, // Validate the token expiry 是否验证失效时间
                     ValidateIssuerSigningKey =true,////是否验证SecurityKey
                     //获取或设置需要使用的microsoft.identitymodel.tokens.securitykey用于签名验证
@@ -92,14 +96,17 @@ namespace SmartCore.Middleware
                 //};
                 x.Events = new JwtBearerEvents
                 {
-                 
+                    //接收到请时触发
                     OnMessageReceived = context=> 
                     { 
                         context.HttpContext.Request.Headers.TryGetValue("Authorization",out var authorization);
                         var accessToken = authorization.FirstOrDefault()?.Split(' ');
-                        if (accessToken!=null&&accessToken.Length == 2)
-                        { 
+                        if (accessToken != null && accessToken.Length == 2)
+                        {
                             context.Token = accessToken[1];
+                        }
+                        else {
+                            context.Token = context.Request.Headers["access_token"];
                         }
                         return Task.CompletedTask;
                     },
@@ -124,6 +131,7 @@ namespace SmartCore.Middleware
                         context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                         return Task.FromResult(0);
                     },
+                    //验证Jwt数据失败时触发
                     OnAuthenticationFailed = context =>
                     {  
                         //自定义返回的数据类型

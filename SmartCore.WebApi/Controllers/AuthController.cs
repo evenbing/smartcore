@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SmartCore.WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// 认证及会话
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -18,10 +18,25 @@ namespace SmartCore.WebApi.Controllers
         #endregion
 
         #region 用户退出登录
+        /// <summary>
+        /// 用户退出登录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("Logout")]
+        public IActionResult Logout()
+        {
+            return Ok();
+        }
         #endregion
 
         #region 获取登录验证码
+        /// <summary>
+        /// 获取登录验证码
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,Route("GetVerifyCode")]
         public async Task<IActionResult> GetVerifyCode() {
+           // await Task.Run(()=>);
             return Ok();
         }
         #endregion

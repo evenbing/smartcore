@@ -1,8 +1,8 @@
 F:\code\donetcore\smartcore\SmartCore.Mail\bin\Debug\netcoreapp3.1\SmartCore.Mail.deps.json
 F:\code\donetcore\smartcore\SmartCore.Mail\bin\Debug\netcoreapp3.1\SmartCore.Mail.dll
-F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.AssemblyInfoInputs.cache
-F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.Mail\bin\Debug\netcoreapp3.1\SmartCore.Mail.pdb
 F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.dll
 F:\code\donetcore\smartcore\SmartCore.Mail\obj\Debug\netcoreapp3.1\SmartCore.Mail.pdb

@@ -1,8 +1,8 @@
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\bin\Debug\netcoreapp3.1\SmartCore.MessageQueue.deps.json
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\bin\Debug\netcoreapp3.1\SmartCore.MessageQueue.dll
-F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.AssemblyInfoInputs.cache
-F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\bin\Debug\netcoreapp3.1\SmartCore.MessageQueue.pdb
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.csprojAssemblyReference.cache
+F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.AssemblyInfoInputs.cache
+F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.AssemblyInfo.cs
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.dll
 F:\code\donetcore\smartcore\SmartCore.MessageQueue\obj\Debug\netcoreapp3.1\SmartCore.MessageQueue.pdb

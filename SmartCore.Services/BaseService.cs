@@ -16,12 +16,12 @@ using System.Web;
 
 namespace SmartCore.Services
 {
-    public abstract class BaseServices
+    public abstract class BaseService
     {
         /// <summary>
         /// cotr
         /// </summary>
-        protected BaseServices()
+        protected BaseService()
         {
             HttpContextAccessor = ServiceProviderInstance.Instance.GetRequiredService<IHttpContextAccessor>();
             Environment = ServiceProviderInstance.Instance.GetRequiredService<IWebHostEnvironment>();

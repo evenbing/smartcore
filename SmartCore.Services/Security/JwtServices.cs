@@ -30,9 +30,9 @@ namespace SmartCore.Services
     /// <summary>
     /// 
     /// </summary>
-    public class JwtServices : BaseServices, IJwtServices
+    public class JwtServices : BaseService, IJwtServices
     { 
-        private JwtConfig tokenSetting = new JwtConfig();
+        private JwtIssuerOptions tokenSetting = new JwtIssuerOptions();
         private readonly ILogger<JwtServices> _logger;
         private IConfiguration _configration;
 
@@ -43,7 +43,7 @@ namespace SmartCore.Services
             // Config appConfig = ConfigService.getAppConfig();
             var jwt = _configration["JwtConfig"];
             var te = _configration.GetSection("JwtConfig");
-            tokenSetting = ConfigUtil.GetAppSettings<JwtConfig>("JwtConfig");
+            tokenSetting = ConfigUtil.GetAppSettings<JwtIssuerOptions>("JwtConfig");
             _logger = logger;
         }
         /// <summary>
@@ -122,6 +122,10 @@ namespace SmartCore.Services
             _logger.LogInformation("生成token成功", token);
             return await Task.FromResult(result);
         }
+        //private ClaimsIdentity GenerateClaimsIdentity(UserTokenDTO userTokenDTO)
+        //{ 
+        
+        //}
         /// <summary>
         /// 
         /// </summary>

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SmartCore.WebApi.Controllers.System
 {
     /// <summary>
-    /// 
+    /// 基础数据
     /// </summary>
     //[Authorize]
     [Route("[controller]")]
@@ -29,7 +29,7 @@ namespace SmartCore.WebApi.Controllers.System
             _sysDictServices = sysDictServices;
         }
         /// <summary>
-        /// 
+        /// 获取数据字典列表
         /// </summary>
         /// <returns></returns>
         [Route("DicList")]

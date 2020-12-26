@@ -11,12 +11,22 @@ namespace SmartCore.Models.Entity
         /// 
         /// </summary>
         public int Id { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string UserName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
 
         public string UserEmail { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string NickName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string RealName { get; set; }
     }
 }

@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SmartCore.WebApi.Controllers
 {
+    /// <summary>
+    /// 附件上传
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class FileUploadController : ControllerBase
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public FileUploadController()
         {
             //_hostingEnvironment = hostingEnvironment;
@@ -21,6 +26,7 @@ namespace SmartCore.WebApi.Controllers
         /// </summary>
         /// <param name="formFile">form表单文件流信息</param>
         /// <returns></returns>
+        [HttpPost,Route("FormSingleFileUpload")]
         public IActionResult FormSingleFileUpload(IFormFile formFile)
         {
             var currentDate = DateTime.Now;
@@ -66,14 +72,14 @@ namespace SmartCore.WebApi.Controllers
             //    return new JsonResult(new { isSuccess = false, resultMsg = "上传失败，未检测上传的文件信息~" });
             //}
 
-            return Ok();
+            return Ok("");
 
         }
-
+        [HttpPost, Route("MultiFileUpload")]
         public IActionResult MultiFileUpload(IFormCollection formCollection)
         {
             var files = (FormFileCollection)formCollection.Files;
-            return Ok();
+            return Ok("");
         }
     }
 }

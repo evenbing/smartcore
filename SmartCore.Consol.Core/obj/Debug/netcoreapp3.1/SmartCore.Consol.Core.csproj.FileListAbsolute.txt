@@ -2,7 +2,6 @@ F:\code\donetcore\smartcore\SmartCore.Consol.Core\bin\Debug\netcoreapp3.1\Proper
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\bin\Debug\netcoreapp3.1\SmartCore.Consol.Core.deps.json
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\bin\Debug\netcoreapp3.1\SmartCore.Consol.Core.dll
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\bin\Debug\netcoreapp3.1\SmartCore.Consol.Core.pdb
-F:\code\donetcore\smartcore\SmartCore.Consol.Core\obj\Debug\netcoreapp3.1\SmartCore.Consol.Core.csprojAssemblyReference.cache
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.Consol.Core.StaticWebAssets.Manifest.cache
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\obj\Debug\netcoreapp3.1\staticwebassets\SmartCore.Consol.Core.StaticWebAssets.xml
 F:\code\donetcore\smartcore\SmartCore.Consol.Core\obj\Debug\netcoreapp3.1\SmartCore.Consol.Core.AssemblyInfoInputs.cache
